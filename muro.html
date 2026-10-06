@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muro de los Héroes - CESBA 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        /* Plantilla oculta para el PDF */
+        #pdf-template { display: none; }
+    </style>
+</head>
+<body class="p-8">
+
+    <div class="max-w-6xl mx-auto text-center mb-10">
+        <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-emerald-400 mb-4">
+            Muro de los Héroes
+        </h1>
+        <p class="text-xl text-gray-400">Ingenieros que han desplegado su infraestructura Edge exitosamente</p>
+    </div>
+
+    <!-- Grid donde aparecerán los alumnos -->
+    <div id="grid-alumnos" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div class="col-span-3 text-center text-gray-500 animate-pulse">Esperando conexiones...</div>
+    </div>
+
+    <!-- Plantilla de Certificado para generar el PDF (Oculta en pantalla) -->
+    <div id="pdf-template">
+        <div id="certificado-content" style="padding: 40px; font-family: sans-serif; text-align: center; background: white; color: #0f172a; border: 10px solid #8b5cf6; height: 100%; box-sizing: border-box;">
+            <h2 style="color: #8b5cf6; font-size: 24px; text-transform: uppercase; letter-spacing: 2px;">Jornada Tecnológica 2026</h2>
+            <h1 style="font-size: 40px; margin: 20px 0;">Certificado de Despliegue</h1>
+            <p style="font-size: 18px; color: #475569;">Se otorga el presente reconocimiento a:</p>
+            <h3 id="cert-nombre" style="font-size: 32px; color: #10b981; margin: 10px 0;">Nombre del Alumno</h3>
+            <p style="font-size: 16px; line-height: 1.6; color: #334155;">Por haber desplegado exitosamente infraestructura Web Edge, CI/CD, configuración de ciberseguridad WAF y backend Serverless (Workers + KV).</p>
+            <div style="margin-top: 40px; border-top: 2px solid #e2e8f0; display: inline-block; padding-top: 10px;">
+                <p style="font-weight: bold; margin: 0;">Mtro. César Gabriel Terrazas Zarazúa</p>
+                <p style="font-size: 12px; color: #64748b; margin: 0;">Instructor - CESBA</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // REEMPLAZA ESTO CON LA URL DE TU SCRIPT DE GOOGLE
+        const API_URL = "https://script.google.com/macros/s/AKfycbyCP0zlB95ADZk1kOZ5qZFh7LSHfMUwi0S3bPFLXai2TXCQw_guuO3-PpvGf3Y_LMPPBQ/exec";
+
+        async function cargarMuro() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                const grid = document.getElementById('grid-alumnos');
+                
+                if(data.length === 0) return;
+                
+                grid.innerHTML = '';
+                // Invertimos para ver a los más recientes arriba
+                data.reverse().forEach(alumno => {
+                    grid.innerHTML += `
+                        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between items-center text-center transform transition hover:scale-105">
+                            <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mb-4 border border-emerald-500/50">
+                                <i class="fa-solid fa-user-astronaut"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-1 truncate w-full">${alumno.nombre}</h3>
+                            <p class="text-sm text-gray-400 mb-4 truncate w-full">${alumno.email}</p>
+                            <button onclick="descargarPDF('${alumno.nombre}')" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition w-full">
+                                <i class="fa-solid fa-download mr-2"></i>Descargar PDF
+                            </button>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar datos:", e);
+            }
+        }
+
+        function descargarPDF(nombre) {
+            // Inyectar el nombre en la plantilla oculta
+            document.getElementById('cert-nombre').innerText = nombre;
+            const elemento = document.getElementById('certificado-content');
+            
+            // Configuración del PDF
+            const opt = {
+                margin:       0,
+                filename:     `Certificado_Edge_${nombre.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+            };
+
+            // Generar y descargar (forzamos que el div sea visible temporalmente para renderizar)
+            elemento.parentElement.style.display = 'block';
+            html2pdf().set(opt).from(elemento).save().then(() => {
+                elemento.parentElement.style.display = 'none';
+            });
+        }
+
+        // Cargar datos inmediatamente y luego cada 5 segundos
+        cargarMuro();
+        setInterval(cargarMuro, 5000);
+    </script>
+</body>
+</html>
