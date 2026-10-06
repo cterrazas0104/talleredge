@@ -22,7 +22,14 @@
     </script>
 
     <style>
-        body { background-color: #0a0f1d; color: #f8fafc; }
+        body { 
+            background-color: #0a0f1d; color: #f8fafc; 
+            /* BLINDAJE ANTI-COPIA */
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
+        }
+        input, textarea, pre, code, .copy-btn { 
+            -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; 
+        }
         .glass-panel { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .code-block { background: #060913; border: 1px solid #1e293b; border-radius: 0.75rem; padding: 1.25rem; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: #e2e8f0; overflow-x: auto; position: relative; }
         .copy-btn { position: absolute; top: 0.75rem; right: 0.75rem; background: #1e293b; border: 1px solid #334155; color: #cbd5e1; padding: 0.35rem 0.75rem; border-radius: 0.375rem; cursor: pointer; transition: all 0.2s; font-size: 0.75rem; font-weight: 500; }
@@ -31,7 +38,6 @@
         .step-check:checked + div { background-color: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
         .step-check:checked + div .check-title { text-decoration: line-through; color: #94a3b8; }
 
-        /* Oculta los pasos bloqueados de forma elegante */
         .locked-step { display: none !important; }
 
         @media print { body { background-color: #0a0f1d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } .no-print { display: none !important; } }
@@ -76,7 +82,6 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <!-- Avance y Panel de Instructor -->
                     <div class="hidden md:flex items-center gap-2 bg-navy-900 border border-navy-700 px-3 py-1.5 rounded-lg text-xs">
                         <i class="fa-solid fa-satellite-dish text-emerald-400 animate-pulse"></i>
                         <span id="sync-status" class="text-gray-300" title="Conectado al Panel del Instructor">En línea</span>
@@ -467,8 +472,7 @@
       const formData = await request.formData();
       const matricula = formData.get("matricula");
 
-      // REEMPLAZA CON LA URL DE TU INSTRUCTOR
-      const apiResponse = await fetch("AQUI_TU_URL_DE_GOOGLE_SCRIPT", {
+      const apiResponse = await fetch("https://script.google.com/macros/s/AKfycbyCP0zlB95ADZk1kOZ5qZFh7LSHfMUwi0S3bPFLXai2TXCQw_guuO3-PpvGf3Y_LMPPBQ/exec", {
         method: "POST", body: JSON.stringify({ action: "webhook", matricula: matricula })
       });
       const validacion = await apiResponse.json();
@@ -532,8 +536,8 @@
 
     </div>
 
+    <!-- SCRIPT DEL SISTEMA LMS -->
     <script>
-        // PEGA AQUÍ TU URL DE GOOGLE SCRIPT
         const API_URL = "https://script.google.com/macros/s/AKfycbyCP0zlB95ADZk1kOZ5qZFh7LSHfMUwi0S3bPFLXai2TXCQw_guuO3-PpvGf3Y_LMPPBQ/exec";
         
         let matriculaActual = localStorage.getItem("cesba_matricula");
@@ -549,7 +553,7 @@
             const errorTxt = document.getElementById("login-error");
             
             if(!input) return;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verificando Matrícula...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sincronizando...';
             errorTxt.classList.add("hidden");
             
             try {
@@ -708,6 +712,16 @@
                 }, 2000);
             });
         }
+    </script>
+
+    <!-- SCRIPT ANTI-INSPECCIÓN -->
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.shiftKey && e.key === 'C') || (e.ctrlKey && (e.key === 'u' || e.key === 'U')) || (e.ctrlKey && (e.key === 's' || e.key === 'S')) || (e.ctrlKey && (e.key === 'p' || e.key === 'P'))) {
+                e.preventDefault(); return false;
+            }
+        });
     </script>
 </body>
 </html>
