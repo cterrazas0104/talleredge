@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Edge - CESBA 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body { background-color: #0f172a; color: white; font-family: sans-serif; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .locked { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center min-h-screen">
+
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen" class="max-w-md w-full glass-panel p-8 rounded-2xl text-center mt-10">
+        <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 border border-emerald-500/40">
+            <i class="fa-solid fa-user-astronaut"></i>
+        </div>
+        <h1 class="text-2xl font-bold mb-2 text-white">Acceso al Laboratorio</h1>
+        <p class="text-sm text-gray-400 mb-6">Ingresa tu Matrícula CESBA para sincronizar tu entorno de trabajo.</p>
+        
+        <input type="text" id="matricula-input" placeholder="Matrícula" class="w-full p-3 rounded-lg bg-navy-900 border border-navy-700 text-white mb-4 text-center text-xl tracking-widest outline-none focus:border-emerald-500">
+        <button onclick="iniciarSesion()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition">Ingresar al Taller</button>
+        <p id="login-error" class="text-red-400 text-sm mt-3 hidden"></p>
+    </div>
+
+    <!-- PANTALLA PRINCIPAL DEL TALLER -->
+    <div id="dashboard-screen" class="max-w-4xl w-full hidden">
+        <div class="flex justify-between items-end border-b border-navy-700 pb-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-emerald-400">Laboratorio Serverless Edge</h1>
+                <p class="text-gray-400">Operador: <span id="nombre-alumno" class="text-white font-bold"></span></p>
+            </div>
+            <div class="text-right">
+                <span class="text-xs text-purple-400 uppercase tracking-widest font-bold block mb-1">Estado de Sincronización</span>
+                <span id="sync-status" class="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-xs border border-purple-500/30">
+                    <i class="fa-solid fa-satellite-dish animate-pulse mr-1"></i> Esperando al Instructor...
+                </span>
+            </div>
+        </div>
+
+        <div class="space-y-6" id="steps-container">
+            
+            <!-- PASO 1 -->
+            <div id="step-1" class="glass-panel p-6 rounded-2xl locked transition-all duration-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold"><span class="bg-navy-800 text-purple-400 px-2 py-1 rounded mr-2">1</span> Repositorio GitHub</h2>
+                    <i class="fa-solid fa-lock text-gray-500 text-xl status-icon"></i>
+                </div>
+                <div class="text-gray-300 text-sm mb-4">
+                    <p>Crea tu repositorio público <code>taller-seguridad</code> en GitHub, agrega tu archivo <code>index.html</code> y haz Commit de la versión inicial.</p>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="evidencia-1" placeholder="Pega aquí la URL de tu repositorio de GitHub" class="flex-1 p-2 rounded bg-navy-900 border border-navy-700 text-white outline-none">
+                    <button onclick="enviarEvidencia(1)" class="bg-purple-600 hover:bg-purple-500 px-4 py-2 rounded text-white font-bold transition">Guardar</button>
+                </div>
+            </div>
+
+            <!-- PASO 2 -->
+            <div id="step-2" class="glass-panel p-6 rounded-2xl locked transition-all duration-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold"><span class="bg-navy-800 text-orange-400 px-2 py-1 rounded mr-2">2</span> Cloudflare Pages (CI/CD)</h2>
+                    <i class="fa-solid fa-lock text-gray-500 text-xl status-icon"></i>
+                </div>
+                <div class="text-gray-300 text-sm mb-4">
+                    <p>Conecta Cloudflare a tu GitHub y despliega tu página en el Edge mundial.</p>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="evidencia-2" placeholder="Pega aquí tu enlace terminado en .pages.dev" class="flex-1 p-2 rounded bg-navy-900 border border-navy-700 text-white outline-none">
+                    <button onclick="enviarEvidencia(2)" class="bg-orange-600 hover:bg-orange-500 px-4 py-2 rounded text-white font-bold transition">Guardar</button>
+                </div>
+            </div>
+
+            <!-- PASO 3 -->
+            <div id="step-3" class="glass-panel p-6 rounded-2xl locked transition-all duration-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold"><span class="bg-navy-800 text-emerald-400 px-2 py-1 rounded mr-2">3</span> Ciberseguridad (WAF)</h2>
+                    <i class="fa-solid fa-lock text-gray-500 text-xl status-icon"></i>
+                </div>
+                <div class="text-gray-300 text-sm mb-4">
+                    <p>Comprende el funcionamiento del escudo WAF y el Managed Challenge. ¿Qué código HTTP devuelve cuando bloquea?</p>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="evidencia-3" placeholder="Escribe el código HTTP de bloqueo (Ej. 403)" class="flex-1 p-2 rounded bg-navy-900 border border-navy-700 text-white outline-none">
+                    <button onclick="enviarEvidencia(3)" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded text-white font-bold transition">Guardar</button>
+                </div>
+            </div>
+
+            <!-- PASO 4 -->
+            <div id="step-4" class="glass-panel p-6 rounded-2xl locked transition-all duration-500">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold"><span class="bg-navy-800 text-blue-400 px-2 py-1 rounded mr-2">4</span> Serverless Worker y Base KV</h2>
+                    <i class="fa-solid fa-lock text-gray-500 text-xl status-icon"></i>
+                </div>
+                <div class="text-gray-300 text-sm mb-4">
+                    <p>Crea el espacio KV, programa tu Worker, haz el Binding de la variable y conecta el formulario HTML.</p>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <textarea id="evidencia-4" rows="4" placeholder="Pega aquí el código JavaScript de tu Worker final" class="w-full p-2 rounded bg-navy-900 border border-navy-700 text-white outline-none text-xs font-mono"></textarea>
+                    <button onclick="enviarEvidencia(4)" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-white font-bold transition self-end">Guardar Evidencia</button>
+                </div>
+            </div>
+            
+            <!-- EXPORTAR PDF -->
+            <div id="step-5" class="glass-panel p-8 rounded-2xl locked text-center mt-10 border-emerald-500 border-2 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                <h2 class="text-2xl font-bold text-white mb-2">¡Laboratorio Completado!</h2>
+                <p class="text-gray-400 mb-6">Tu infraestructura está conectada al Muro de los Héroes.</p>
+                <button onclick="generarPDF()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-3 rounded-xl font-bold text-lg transition shadow-lg w-full md:w-auto">
+                    <i class="fa-solid fa-file-pdf mr-2"></i>Generar Mi Documento Final
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Div Oculto para Renderizar el PDF Limpio -->
+    <div id="pdf-content" style="display:none; background: white; color: black; padding: 40px; font-family: sans-serif;">
+        <h1 style="color: #10b981; font-size: 24px; border-bottom: 2px solid #10b981; padding-bottom: 10px;">Reporte de Infraestructura Edge</h1>
+        <p><strong>Alumno:</strong> <span id="pdf-nombre"></span> (<span id="pdf-matricula"></span>)</p>
+        <p><strong>Fecha:</strong> <span id="pdf-fecha"></span></p>
+        <div style="margin-top: 20px;">
+            <h3 style="color: #475569;">1. Repositorio GitHub</h3><p style="background: #f1f5f9; padding: 10px; border-radius: 5px;" id="pdf-ev-1"></p>
+            <h3 style="color: #475569;">2. Enlace de Producción (Cloudflare Pages)</h3><p style="background: #f1f5f9; padding: 10px; border-radius: 5px;" id="pdf-ev-2"></p>
+            <h3 style="color: #475569;">3. Mitigación WAF</h3><p style="background: #f1f5f9; padding: 10px; border-radius: 5px;" id="pdf-ev-3"></p>
+            <h3 style="color: #475569;">4. Código del Serverless Worker</h3><pre style="background: #f1f5f9; padding: 10px; border-radius: 5px; font-size: 10px; white-space: pre-wrap;" id="pdf-ev-4"></pre>
+        </div>
+    </div>
+
+    <script>
+        // PEGA AQUÍ TU URL DE GOOGLE SCRIPT
+        const API_URL = "AQUI_TU_URL_DE_GOOGLE_SCRIPT";
+        
+        let matriculaActual = localStorage.getItem("cesba_matricula");
+        let nombreActual = localStorage.getItem("cesba_nombre");
+
+        // Inicio Rápido
+        if (matriculaActual && nombreActual) {
+            mostrarDashboard();
+        }
+
+        async function iniciarSesion() {
+            const btn = document.querySelector("#login-screen button");
+            const input = document.getElementById("matricula-input").value.trim();
+            const errorTxt = document.getElementById("login-error");
+            
+            if(!input) return;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Validando...';
+            
+            try {
+                const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "login", matricula: input }) });
+                const data = await res.json();
+                
+                if(data.status === "success") {
+                    localStorage.setItem("cesba_matricula", input);
+                    localStorage.setItem("cesba_nombre", data.nombre);
+                    matriculaActual = input;
+                    nombreActual = data.nombre;
+                    mostrarDashboard();
+                } else {
+                    errorTxt.innerText = data.message;
+                    errorTxt.classList.remove("hidden");
+                    btn.innerHTML = 'Ingresar al Taller';
+                }
+            } catch(e) {
+                errorTxt.innerText = "Error de conexión al servidor.";
+                errorTxt.classList.remove("hidden");
+                btn.innerHTML = 'Ingresar al Taller';
+            }
+        }
+
+        function mostrarDashboard() {
+            document.getElementById("login-screen").classList.add("hidden");
+            document.getElementById("dashboard-screen").classList.remove("hidden");
+            document.getElementById("nombre-alumno").innerText = nombreActual;
+            
+            // Iniciar sincronización (Polling) cada 5 segundos
+            sincronizarConInstructor();
+            setInterval(sincronizarConInstructor, 5000);
+        }
+
+        async function sincronizarConInstructor() {
+            try {
+                const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "check_step" }) });
+                const data = await res.json();
+                if(data.status === "success") {
+                    desbloquearPasos(data.current_step);
+                }
+            } catch(e) {
+                console.log("Esperando conexión...");
+            }
+        }
+
+        function desbloquearPasos(pasoActual) {
+            for(let i = 1; i <= 5; i++) {
+                const stepDiv = document.getElementById(`step-${i}`);
+                if(!stepDiv) continue;
+                
+                if(i <= pasoActual) {
+                    stepDiv.classList.remove("locked");
+                    const icon = stepDiv.querySelector(".status-icon");
+                    if(icon) {
+                        icon.classList.remove("fa-lock", "text-gray-500");
+                        icon.classList.add("fa-unlock", "text-emerald-400");
+                    }
+                } else {
+                    stepDiv.classList.add("locked");
+                }
+            }
+        }
+
+        async function enviarEvidencia(paso) {
+            const btn = document.querySelector(`#step-${paso} button`);
+            const evidencia = document.getElementById(`evidencia-${paso}`).value;
+            
+            if(!evidencia) return alert("Por favor ingresa la evidencia requerida.");
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            try {
+                await fetch(API_URL, { 
+                    method: "POST", 
+                    body: JSON.stringify({ action: "save_evidence", matricula: matriculaActual, paso: paso, evidencia: evidencia }) 
+                });
+                
+                // Guardar localmente para armar el PDF después
+                localStorage.setItem(`cesba_ev_${paso}`, evidencia);
+                
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Guardado';
+                btn.classList.replace("bg-purple-600", "bg-emerald-600");
+                btn.classList.replace("bg-orange-600", "bg-emerald-600");
+                btn.classList.replace("bg-blue-600", "bg-emerald-600");
+            } catch(e) {
+                btn.innerHTML = 'Error';
+            }
+        }
+
+        function generarPDF() {
+            // Llenar plantilla oculta
+            document.getElementById('pdf-nombre').innerText = nombreActual;
+            document.getElementById('pdf-matricula').innerText = matriculaActual;
+            document.getElementById('pdf-fecha').innerText = new Date().toLocaleDateString();
+            
+            document.getElementById('pdf-ev-1').innerText = localStorage.getItem("cesba_ev_1") || "Pendiente";
+            document.getElementById('pdf-ev-2').innerText = localStorage.getItem("cesba_ev_2") || "Pendiente";
+            document.getElementById('pdf-ev-3').innerText = localStorage.getItem("cesba_ev_3") || "Pendiente";
+            document.getElementById('pdf-ev-4').innerText = localStorage.getItem("cesba_ev_4") || "Pendiente";
+
+            const elemento = document.getElementById('pdf-content');
+            elemento.style.display = 'block';
+            
+            const opt = {
+                margin:       1,
+                filename:     `Practica_Edge_${matriculaActual}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(elemento).save().then(() => {
+                elemento.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
