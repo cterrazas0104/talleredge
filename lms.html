@@ -15,7 +15,7 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-                    colors: { navy: { 950: '#060913', 900: '#0a0f1d', 800: '#0f172a', 700: '#1e293b' }, purple: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed' }, emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' }, orange: { 400: '#fb923c', 500: '#f97316' }, blue: { 400: '#60a5fa', 500: '#3b82f6' } }
+                    colors: { navy: { 950: '#060913', 900: '#0a0f1d', 800: '#0f172a', 700: '#1e293b' }, purple: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed' }, emerald: { 400: '#34d399', 500: '#10b981', 600: '#059669' }, orange: { 400: '#fb923c', 500: '#f97316' }, blue: { 400: '#60a5fa', 500: '#3b82f6' }, yellow: { 400: '#facc15', 500: '#eab308' } }
                 }
             }
         }
@@ -24,7 +24,6 @@
     <style>
         body { 
             background-color: #0a0f1d; color: #f8fafc; 
-            /* BLINDAJE ANTI-COPIA */
             -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
         }
         input, textarea, pre, code, .copy-btn { 
@@ -37,7 +36,6 @@
         
         .step-check:checked + div { background-color: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); }
         .step-check:checked + div .check-title { text-decoration: line-through; color: #94a3b8; }
-
         .locked-step { display: none !important; }
 
         @media print { body { background-color: #0a0f1d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } .no-print { display: none !important; } }
@@ -63,14 +61,12 @@
     <!-- CONTENEDOR PRINCIPAL DEL MANUAL -->
     <div id="dashboard-screen" class="hidden flex-1 flex flex-col relative">
 
-        <!-- Barra de Progreso Superior -->
         <div class="fixed top-0 left-0 w-full h-1 bg-navy-800 z-50 no-print">
             <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-500 to-emerald-500 transition-all duration-300 w-0"></div>
         </div>
 
         <header class="sticky top-0 glass-panel border-b border-navy-700 z-40 px-4 md:px-8 py-3.5 no-print shadow-md">
             <div class="max-w-7xl mx-auto flex items-center justify-between">
-                <!-- Títulos Originales Restaurados -->
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-purple-500 to-navy-900 flex items-center justify-center border border-purple-500/30 shadow-md">
                         <i class="fa-solid fa-book-open-reader text-sm text-white"></i>
@@ -88,7 +84,7 @@
                     </div>
                     <div class="hidden md:flex items-center gap-2 bg-navy-900 border border-navy-700 px-3 py-1.5 rounded-lg text-xs">
                         <span class="text-gray-400">Avance:</span>
-                        <span id="progress-text" class="font-mono font-bold text-emerald-400">0/4</span>
+                        <span id="progress-text" class="font-mono font-bold text-emerald-400">0/5</span>
                     </div>
                     <div class="flex items-center gap-2 bg-navy-900 border border-navy-700 px-3 py-1.5 rounded-lg text-xs">
                         <i class="fa-solid fa-user-astronaut text-gray-400"></i>
@@ -106,12 +102,8 @@
                 <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4">
                     Infraestructura Web y <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-emerald-400">Ciberseguridad</span>
                 </h1>
-                <p class="text-lg md:text-xl text-gray-400 font-light max-w-2xl mx-auto mb-8">
-                    De Cero a Producción Edge (Serverless): Aprende a desplegar sitios globales, protegerlos con WAF y conectar una API de validación de identidad para el Muro de los Héroes.
-                </p>
-
-                <!-- TU TARJETA DE INSTRUCTOR RESTAURADA -->
-                <div class="inline-flex flex-col sm:flex-row items-center gap-4 glass-panel px-6 py-4 rounded-2xl border border-navy-700 text-left">
+                
+                <div class="inline-flex flex-col sm:flex-row items-center gap-4 glass-panel px-6 py-4 rounded-2xl border border-navy-700 text-left mb-8">
                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-navy-900 border border-purple-400 flex items-center justify-center text-xl shrink-0">
                         <i class="fa-solid fa-chalkboard-user text-white"></i>
                     </div>
@@ -126,7 +118,6 @@
 
         <div class="max-w-7xl mx-auto px-4 md:px-8 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1 w-full">
             
-            <!-- Índice de Navegación Lateral (Mapeado a 6 Pasos) -->
             <aside class="lg:col-span-3 no-print">
                 <div class="sticky top-24 glass-panel rounded-2xl p-5 border border-navy-700 shadow-xl">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-4 flex items-center gap-2">
@@ -153,252 +144,142 @@
                             <span class="flex items-center gap-2.5"><span class="w-5 h-5 rounded bg-navy-800 text-blue-400 text-xs flex items-center justify-center font-mono font-bold">4</span> Serverless API</span>
                             <i class="fa-solid fa-lock text-red-500/50 text-xs icon-nav-5"></i>
                         </a>
-                        <a href="#reto-pro" class="flex items-center justify-between px-3 py-2 rounded-lg text-orange-300 bg-orange-500/10 border border-orange-500/20 font-medium">
-                            <span class="flex items-center gap-2.5"><i class="fa-solid fa-fire text-xs text-orange-400"></i> Reto Pro y PDF</span>
+                        <a href="#reto-pro" class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-300 hover:bg-navy-800 transition">
+                            <span class="flex items-center gap-2.5"><span class="w-5 h-5 rounded bg-navy-800 text-purple-400 text-xs flex items-center justify-center font-mono font-bold">5</span> Reto WAF / PDF</span>
                             <i class="fa-solid fa-lock text-red-500/50 text-xs icon-nav-6"></i>
+                        </a>
+                        <a href="#modulo-vip" class="flex items-center justify-between px-3 py-2 rounded-lg text-yellow-300 bg-yellow-500/10 border border-yellow-500/20 font-medium mt-2 shadow-[0_0_10px_rgba(234,179,8,0.1)]">
+                            <span class="flex items-center gap-2.5"><i class="fa-solid fa-star text-xs text-yellow-400"></i> Bonus VIP CRUD</span>
+                            <i class="fa-solid fa-lock text-red-500/50 text-xs icon-nav-7"></i>
                         </a>
                     </nav>
                 </div>
             </aside>
 
-            <!-- Columna de Pasos (LMS Controlado por data-step) -->
             <main class="lg:col-span-9 space-y-12 pb-20">
 
-                <!-- PASO 1 (Se desbloquea con Step 1) -->
                 <section id="requisitos" data-step="1" class="glass-panel rounded-2xl p-6 md:p-8 border border-navy-700 locked-step transition-opacity duration-700">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                            <i class="fa-solid fa-toolbox"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xl md:text-2xl font-bold text-white">0. Requisitos Previos</h2>
-                            <p class="text-xs md:text-sm text-gray-400">Lo único que necesitas antes de comenzar (100% gratuito, sin tarjeta de crédito)</p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                        <div class="bg-navy-900/80 p-4 rounded-xl border border-navy-700">
-                            <h4 class="font-bold text-sm text-white mb-1"><i class="fa-brands fa-github text-gray-200 mr-2"></i>1. Cuenta en GitHub</h4>
-                            <p class="text-xs text-gray-400 leading-relaxed">Regístrate gratis en <a href="https://github.com" target="_blank" class="text-purple-400 underline">github.com</a>. Será la bóveda en la nube para tu código fuente.</p>
-                        </div>
-                        <div class="bg-navy-900/80 p-4 rounded-xl border border-navy-700">
-                            <h4 class="font-bold text-sm text-white mb-1"><i class="fa-solid fa-cloud text-orange-400 mr-2"></i>2. Cuenta en Cloudflare</h4>
-                            <p class="text-xs text-gray-400 leading-relaxed">Regístrate gratis en <a href="https://dash.cloudflare.com/sign-up" target="_blank" class="text-orange-400 underline">dash.cloudflare.com</a> y verifica tu correo electrónico.</p>
-                        </div>
-                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-white mb-2"><i class="fa-solid fa-toolbox text-emerald-400 mr-2"></i>0. Requisitos Previos</h2>
+                    <p class="text-xs md:text-sm text-gray-400 mb-4">Asegúrate de tener cuentas verificadas en GitHub y Cloudflare (100% gratuitas).</p>
                 </section>
 
-                <!-- PASO 2: IDENTIDAD Y GITHUB (Se desbloquea en Step 2) -->
                 <section id="paso-1" data-step="2" class="glass-panel rounded-2xl p-6 md:p-8 border border-navy-700 relative overflow-hidden locked-step transition-opacity duration-700">
                     <div class="flex justify-between items-start mb-6">
                         <div>
                             <span class="text-xs font-mono uppercase tracking-wider text-purple-400 font-semibold">Fase 01 y 02 • Arquitectura y Código</span>
                             <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Identidad Edge y Repositorio GitHub</h2>
                         </div>
-                        <span class="text-4xl font-black text-navy-700 select-none">1/2</span>
                     </div>
+                    <p class="text-gray-300 text-sm mb-6">Crea en GitHub un repositorio público llamado <code class="bg-navy-800 text-purple-400 px-1.5 rounded">taller-seguridad</code>, agrega <code class="bg-navy-800 text-emerald-400 px-1.5 rounded">index.html</code>, pega este código y haz Commit.</p>
 
-                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
-                        En la arquitectura web tradicional, publicar un sitio requería alquilar un servidor y configurar DNS. Hoy utilizaremos <strong>Infraestructura Edge</strong>: tu web se replicará en 300 centros de datos mundiales. Tu código vivirá seguro en <strong>GitHub</strong>.
-                    </p>
-
-                    <div class="space-y-4 mb-6">
-                        <div class="flex gap-4 items-start bg-navy-900/60 p-4 rounded-xl border border-navy-700">
-                            <span class="w-7 h-7 rounded-full bg-purple-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
-                            <div class="text-sm">
-                                <h4 class="font-bold text-white">Crear un nuevo repositorio</h4>
-                                <p class="text-gray-400 text-xs mt-1">Inicia sesión en GitHub, haz clic en <strong>New repository</strong>. Nómbralo <code class="bg-navy-800 text-purple-400 px-1.5 py-0.5 rounded">taller-seguridad</code> (Debe ser Público).</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-4 items-start bg-navy-900/60 p-4 rounded-xl border border-navy-700">
-                            <span class="w-7 h-7 rounded-full bg-purple-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
-                            <div class="text-sm">
-                                <h4 class="font-bold text-white">Crear el archivo principal <code class="text-emerald-400">index.html</code></h4>
-                                <p class="text-gray-400 text-xs mt-1">Crea un archivo llamado <code class="bg-navy-800 text-emerald-400 px-1.5 py-0.5 rounded">index.html</code>, pega el código de abajo y da clic en <strong>Commit changes</strong>.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Código HTML Inicial -->
                     <div class="code-block mb-6">
                         <button class="copy-btn" onclick="copyCode('code-html-1', this)"><i class="fa-regular fa-copy mr-1"></i> Copiar código</button>
 <pre id="code-html-1"><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="es"&gt;
 &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
     &lt;title&gt;Mi Web Segura - CESBA&lt;/title&gt;
-    &lt;style&gt;
-        body { font-family: sans-serif; background: #0f172a; color: white; text-align: center; padding-top: 10%; margin: 0; }
-        h1 { color: #10b981; font-size: 2.5rem; margin-bottom: 0.5rem; }
-        .container { border: 1px solid #334155; padding: 2.5rem; border-radius: 1rem; display: inline-block; background: #1e293b; max-width: 450px; }
-    &lt;/style&gt;
+    &lt;style&gt;body { font-family: sans-serif; background: #0f172a; color: white; text-align: center; padding-top: 10%; margin: 0; } .container { border: 1px solid #334155; padding: 2.5rem; border-radius: 1rem; display: inline-block; background: #1e293b; max-width: 450px; }&lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
     &lt;div class="container"&gt;
-        &lt;h1&gt;¡Misión Cumplida! 🚀&lt;/h1&gt;
+        &lt;h1 style="color:#10b981;"&gt;¡Misión Cumplida! 🚀&lt;/h1&gt;
         &lt;p&gt;Infraestructura Edge desplegada exitosamente.&lt;/p&gt;
     &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
                     </div>
 
-                    <!-- EVIDENCIA LMS 1 -->
                     <div class="mt-8 p-6 bg-purple-500/10 border border-purple-500/30 rounded-xl shadow-lg">
-                        <h4 class="text-purple-400 font-bold mb-3 flex items-center"><i class="fa-solid fa-cloud-arrow-up mr-2 text-lg"></i>Evidencia de la Fase 1 y 2</h4>
-                        <p class="text-xs text-gray-400 mb-4">Copia la URL superior de tu navegador de GitHub (donde se ve tu repositorio creado) y pégala aquí para que el Instructor la valide.</p>
+                        <h4 class="text-purple-400 font-bold mb-3"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Evidencia de la Fase 1 y 2</h4>
                         <div class="flex flex-col sm:flex-row gap-3">
                             <input type="text" id="evidencia-1" placeholder="Ej: https://github.com/tu-usuario/taller-seguridad" class="flex-1 p-3 rounded-lg bg-navy-950 border border-navy-700 text-white outline-none focus:border-purple-500 transition">
-                            <button onclick="enviarEvidencia(1, 'evidencia-1')" id="btn-ev-1" class="bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-lg text-white font-bold transition whitespace-nowrap">Guardar Evidencia</button>
+                            <button onclick="enviarEvidencia(1, 'evidencia-1')" id="btn-ev-1" class="bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-lg text-white font-bold transition">Guardar</button>
                         </div>
                     </div>
                 </section>
 
-                <!-- PASO 3 (Se desbloquea en Step 3) -->
                 <section id="paso-3" data-step="3" class="glass-panel rounded-2xl p-6 md:p-8 border border-navy-700 locked-step transition-opacity duration-700">
                     <div class="flex justify-between items-start mb-6">
                         <div>
                             <span class="text-xs font-mono uppercase tracking-wider text-orange-400 font-semibold">Fase 03 • Despliegue Continuo (CI/CD)</span>
                             <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Conectando GitHub a Cloudflare Pages</h2>
                         </div>
-                        <span class="text-4xl font-black text-navy-700 select-none">03</span>
                     </div>
+                    <p class="text-gray-300 text-sm mb-6">En Cloudflare: <strong>Workers & Pages</strong> > Pestaña <strong>Pages</strong> > <strong>Connect to Git</strong>. Conecta tu GitHub y despliega <code class="text-orange-300">taller-seguridad</code>.</p>
 
-                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
-                        Crearemos un <strong>Pipeline CI/CD</strong>. Conectaremos Cloudflare con tu GitHub para que cada vez que modifiques tu código, Cloudflare lo detecte y actualice tu página en el mundo en segundos.
-                    </p>
-
-                    <div class="space-y-4 mb-6">
-                        <div class="flex gap-4 items-start bg-navy-900/60 p-4 rounded-xl border border-navy-700">
-                            <span class="w-7 h-7 rounded-full bg-orange-500 text-navy-950 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
-                            <div class="text-sm">
-                                <h4 class="font-bold text-white">Autorizar y Desplegar</h4>
-                                <p class="text-gray-400 text-xs mt-1">Entra a <a href="https://dash.cloudflare.com" target="_blank" class="text-orange-400 underline">dash.cloudflare.com</a>. Menú izquierdo > <strong>Workers & Pages</strong> > Pestaña <strong>Pages</strong> > botón azul <strong>Connect to Git</strong>. Conecta tu GitHub, elige <code class="text-orange-300">taller-seguridad</code>, presiona <strong>Begin setup</strong> y luego <strong>Save and Deploy</strong>.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- EVIDENCIA LMS 2 -->
                     <div class="mt-8 p-6 bg-orange-500/10 border border-orange-500/30 rounded-xl shadow-lg">
-                        <h4 class="text-orange-400 font-bold mb-3 flex items-center"><i class="fa-solid fa-cloud-arrow-up mr-2 text-lg"></i>Evidencia de la Fase 3</h4>
-                        <p class="text-xs text-gray-400 mb-4">Abre el enlace público que te dio Cloudflare y pégalo aquí para validar que tu servidor Edge está vivo.</p>
+                        <h4 class="text-orange-400 font-bold mb-3"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Evidencia de la Fase 3</h4>
                         <div class="flex flex-col sm:flex-row gap-3">
                             <input type="text" id="evidencia-2" placeholder="Ej: https://taller-seguridad-xxx.pages.dev" class="flex-1 p-3 rounded-lg bg-navy-950 border border-navy-700 text-white outline-none focus:border-orange-500 transition">
-                            <button onclick="enviarEvidencia(2, 'evidencia-2')" id="btn-ev-2" class="bg-orange-600 hover:bg-orange-500 px-6 py-3 rounded-lg text-white font-bold transition whitespace-nowrap">Guardar Evidencia</button>
+                            <button onclick="enviarEvidencia(2, 'evidencia-2')" id="btn-ev-2" class="bg-orange-600 hover:bg-orange-500 px-6 py-3 rounded-lg text-white font-bold transition">Guardar</button>
                         </div>
                     </div>
                 </section>
 
-                <!-- PASO 4 (Se desbloquea en Step 4) -->
                 <section id="paso-4" data-step="4" class="glass-panel rounded-2xl p-6 md:p-8 border border-navy-700 locked-step transition-opacity duration-700">
                     <div class="flex justify-between items-start mb-6">
                         <div>
                             <span class="text-xs font-mono uppercase tracking-wider text-emerald-400 font-semibold">Fase 04 • Ciberseguridad Perimetral</span>
                             <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Hardening y Firewall (WAF)</h2>
                         </div>
-                        <span class="text-4xl font-black text-navy-700 select-none">04</span>
                     </div>
+                    <p class="text-gray-300 text-sm mb-6">Observa el candado SSL activo en tu URL. El instructor simulará una regla WAF usando <strong>Managed Challenge</strong> en la Capa 7 del Modelo OSI.</p>
 
-                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
-                        Un sitio en internet recibe escaneos de bots a los pocos minutos de nacer. Observa el candado SSL activo en tu URL. El instructor simulará ahora una regla WAF usando <strong>Managed Challenge</strong> para frenar tráfico malicioso en la Capa 7 del Modelo OSI.
-                    </p>
-
-                    <!-- EVIDENCIA LMS 3 -->
                     <div class="mt-8 p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-xl shadow-lg">
-                        <h4 class="text-emerald-400 font-bold mb-3 flex items-center"><i class="fa-solid fa-cloud-arrow-up mr-2 text-lg"></i>Evidencia de la Fase 4</h4>
-                        <p class="text-xs text-gray-400 mb-4">¿Cuál es el código de estado HTTP que devuelve el servidor web cuando una regla WAF bloquea definitivamente a un usuario malicioso? (Escríbelo abajo)</p>
+                        <h4 class="text-emerald-400 font-bold mb-3"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Evidencia de la Fase 4</h4>
+                        <p class="text-xs text-gray-400 mb-2">Código de estado HTTP del bloqueo:</p>
                         <div class="flex flex-col sm:flex-row gap-3">
-                            <input type="text" id="evidencia-3" placeholder="Ej: 404, 500, etc." class="flex-1 p-3 rounded-lg bg-navy-950 border border-navy-700 text-white outline-none focus:border-emerald-500 transition">
-                            <button onclick="enviarEvidencia(3, 'evidencia-3')" id="btn-ev-3" class="bg-emerald-600 hover:bg-emerald-500 px-6 py-3 rounded-lg text-white font-bold transition whitespace-nowrap">Guardar Evidencia</button>
+                            <input type="text" id="evidencia-3" placeholder="Ej: 403" class="flex-1 p-3 rounded-lg bg-navy-950 border border-navy-700 text-white outline-none focus:border-emerald-500 transition">
+                            <button onclick="enviarEvidencia(3, 'evidencia-3')" id="btn-ev-3" class="bg-emerald-600 hover:bg-emerald-500 px-6 py-3 rounded-lg text-white font-bold transition">Guardar</button>
                         </div>
                     </div>
                 </section>
 
-                <!-- PASO 5 (Se desbloquea en Step 5) -->
                 <section id="paso-5" data-step="5" class="glass-panel rounded-2xl p-6 md:p-8 border-2 border-purple-500/40 shadow-[0_0_40px_rgba(139,92,246,0.1)] locked-step transition-opacity duration-700">
                     <div class="flex justify-between items-start mb-6">
                         <div>
                             <span class="text-xs font-mono uppercase tracking-wider text-blue-400 font-semibold">Fase 05 • Backend Serverless e IAM</span>
                             <h2 class="text-2xl md:text-3xl font-bold text-white mt-1">Worker API + Muro de los Héroes</h2>
                         </div>
-                        <span class="text-4xl font-black text-navy-700 select-none">05</span>
                     </div>
 
-                    <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
-                        Programaremos un <strong>Cloudflare Worker</strong>. Este código se comunicará vía API con el servidor maestro del instructor para validar tu Matrícula, guardará la sesión en tu propia base <strong>Key-Value (KV)</strong> y pintará tu nombre en el Muro de los Héroes proyectado en clase.
-                    </p>
-
-                    <!-- Subpaso A y B -->
-                    <div class="mb-8">
-                        <h3 class="text-lg font-bold text-emerald-400 mb-2">A. Crear KV</h3>
-                        <p class="text-sm text-gray-300 mb-6">En Cloudflare: <strong>Storage & Databases > KV > Create</strong>. Nómbralo en mayúsculas <code class="bg-navy-800 text-emerald-400 px-1 rounded font-mono">CONTACTOS</code>.</p>
-                        
-                        <h3 class="text-lg font-bold text-orange-400 mb-2">B. Crear Worker (El Validador IAM)</h3>
-                        <p class="text-sm text-gray-300 mb-3">En <strong>Workers & Pages</strong> > <strong>Create Worker</strong>. Nómbralo <code>api-contactos</code>, dale <strong>Deploy</strong> y luego a <strong>Edit Code</strong>. Pega esto:</p>
-                        
-                        <div class="code-block">
-                            <button class="copy-btn" onclick="copyCode('code-worker', this)"><i class="fa-regular fa-copy mr-1"></i> Copiar Worker JS</button>
+                    <h3 class="text-lg font-bold text-emerald-400 mb-2">A. Crear KV y B. Crear Worker JS</h3>
+                    <p class="text-sm text-gray-300 mb-3">Crea la KV <code>CONTACTOS</code>. Crea el Worker <code>api-contactos</code> y pega esto:</p>
+                    
+                    <div class="code-block mb-6">
+                        <button class="copy-btn" onclick="copyCode('code-worker', this)"><i class="fa-regular fa-copy mr-1"></i> Copiar JS</button>
 <pre id="code-worker"><code>export default {
   async fetch(request, env) {
     if (request.method === "POST") {
       const formData = await request.formData();
       const matricula = formData.get("matricula");
       
-      // 1. Enviar matrícula a la API del Instructor para validación
       const apiResponse = await fetch("https://script.google.com/macros/s/AKfycbyCP0zlB95ADZk1kOZ5qZFh7LSHfMUwi0S3bPFLXai2TXCQw_guuO3-PpvGf3Y_LMPPBQ/exec", {
-        method: "POST",
-        body: JSON.stringify({ action: "webhook", matricula: matricula })
+        method: "POST", body: JSON.stringify({ action: "webhook", matricula: matricula })
       });
       const validacion = await apiResponse.json();
 
-      // 2. Si la matrícula es inventada (Error 403)
-      if (validacion.status === "error") {
-        return new Response(`🛑 ACCESO DENEGADO: ${validacion.message}`, { 
-          status: 403, headers: { "Content-Type": "text/plain; charset=utf-8" } 
-        });
-      }
+      if (validacion.status === "error") return new Response(`🛑 ACCESO DENEGADO`, { status: 403 });
 
-      // 3. Si existe, guardar en tu propia Base de Datos KV
       const registroFinal = {
         matricula: matricula, nombre_oficial: validacion.nombre,
         fecha: new Date().toLocaleString("es-MX", { timeZone: "America/Mexico_City" })
       };
       await env.CONTACTOS.put(matricula, JSON.stringify(registroFinal));
       
-      return new Response(`✅ ¡Identidad Confirmada!\nBienvenido ${validacion.nombre}. Tu infraestructura Edge está conectada al Muro de los Héroes.`, {
-        headers: { "Access-Control-Allow-Origin": "*", "Content-Type": "text/plain; charset=utf-8" }
-      });
+      return new Response(`✅ ¡Identidad Confirmada!\nBienvenido ${validacion.nombre}.`, { headers: { "Access-Control-Allow-Origin": "*" } });
     }
-
-    return new Response("API Edge Activa. Esperando autenticación por Matrícula.");
+    return new Response("API Edge Activa.");
   }
 };</code></pre>
-                        </div>
                     </div>
 
-                    <!-- Subpaso C -->
-                    <div class="mb-8">
-                        <h3 class="text-lg font-bold text-purple-400 mb-3">C. Vincular KV (El Paso Crítico)</h3>
-                        <div class="bg-red-500/10 p-4 rounded-xl border border-red-500/40 text-sm text-red-200 mb-3">
-                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>CUIDADO:</strong> Asegúrate de estar en los Settings del <strong>Worker</strong>, NO de la KV.
-                        </div>
-                        <ol class="list-decimal list-inside text-sm text-gray-300 space-y-2 bg-navy-900/60 p-4 rounded-xl border border-navy-700">
-                            <li>Entra a la pestaña <strong>Settings</strong> de tu Worker `api-contactos`.</li>
-                            <li>Ve a la sección <strong>Bindings</strong>, haz clic en <strong>+ Add binding</strong> y elige <strong>KV Namespace</strong>.</li>
-                            <li>En *Variable name* escribe EXACTAMENTE: <code class="text-emerald-400 font-bold">CONTACTOS</code></li>
-                            <li>En *KV namespace* selecciona el espacio CONTACTOS y dale al botón azul <strong>Add Binding</strong>.</li>
-                            <li>En la pestaña *Overview* de tu Worker, copia su URL (termina en <code>.workers.dev</code>).</li>
-                        </ol>
-                    </div>
+                    <h3 class="text-lg font-bold text-purple-400 mb-2">C. Vincular KV (Settings del Worker) y D. Conectar HTML</h3>
+                    <p class="text-sm text-gray-300 mb-3">Añade el Binding de <code>CONTACTOS</code>. Luego edita tu <code>index.html</code> en GitHub y reemplaza con este código (pon la URL de tu Worker en action).</p>
 
-                    <!-- Subpaso D -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-bold text-blue-400 mb-3">D. Conectar tu Página de GitHub</h3>
-                        <p class="text-sm text-gray-300 mb-3">En GitHub, edita <code>index.html</code>, pega esto y <strong>cambia el action</strong> por la URL de tu Worker. Da click en Commit.</p>
-
-                        <div class="code-block">
-                            <button class="copy-btn" onclick="copyCode('code-html-final', this)"><i class="fa-regular fa-copy mr-1"></i> Copiar HTML Final</button>
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode('code-html-final', this)"><i class="fa-regular fa-copy mr-1"></i> Copiar HTML Final</button>
 <pre id="code-html-final"><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="es"&gt;
 &lt;head&gt;
@@ -415,58 +296,42 @@
 &lt;body&gt;
     &lt;div class="container"&gt;
         &lt;h1 style="color:#10b981; font-size:1.8rem; margin-top:0;"&gt;🚀 Enlace al Edge&lt;/h1&gt;
-
-        &lt;!-- IMPORTANTE: Pega aquí la URL de tu Worker --&gt;
         &lt;form action="https://TU-WORKER.TU-USUARIO.workers.dev" method="POST"&gt;
-            &lt;label style="color:#94a3b8; font-weight:bold; font-size:0.85rem;"&gt;Matrícula Oficial CESBA:&lt;/label&gt;
+            &lt;label style="color:#94a3b8; font-size:0.85rem;"&gt;Matrícula Oficial CESBA:&lt;/label&gt;
             &lt;input type="text" name="matricula" placeholder="Ej. 123456" required&gt;
             &lt;button type="submit"&gt;Autenticar y Desplegar&lt;/button&gt;
         &lt;/form&gt;
     &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-                        </div>
                     </div>
 
-                    <!-- EVIDENCIA LMS 4 -->
                     <div class="mt-8 p-6 bg-blue-500/10 border border-blue-500/30 rounded-xl shadow-lg">
-                        <h4 class="text-blue-400 font-bold mb-3 flex items-center"><i class="fa-solid fa-cloud-arrow-up mr-2 text-lg"></i>Evidencia de la Fase 5</h4>
-                        <p class="text-xs text-gray-400 mb-4">Abre tu enlace <code>.pages.dev</code>, envía el formulario para aparecer en el Muro. Una vez hecho eso, pega aquí TODO tu archivo <code>worker.js</code>. Esta es tu prueba forense.</p>
+                        <h4 class="text-blue-400 font-bold mb-3"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Evidencia de la Fase 5</h4>
+                        <p class="text-xs text-gray-400 mb-2">Envía el formulario desde tu web. Si apareces en el Muro, pega aquí tu archivo <code>worker.js</code> completo.</p>
                         <div class="flex flex-col gap-3">
-                            <textarea id="evidencia-4" rows="4" placeholder="export default { async fetch(...) { ... } }" class="w-full p-3 rounded-lg bg-navy-950 border border-navy-700 text-white outline-none focus:border-blue-500 font-mono text-xs transition"></textarea>
-                            <button onclick="enviarEvidencia(4, 'evidencia-4')" id="btn-ev-4" class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg text-white font-bold transition self-end">Guardar Evidencia</button>
+                            <textarea id="evidencia-4" rows="3" placeholder="export default { async fetch(...) { ... } }" class="w-full p-3 rounded-lg bg-navy-950 border border-navy-700 text-white outline-none focus:border-blue-500 font-mono text-xs transition"></textarea>
+                            <button onclick="enviarEvidencia(4, 'evidencia-4')" id="btn-ev-4" class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg text-white font-bold transition self-end">Guardar</button>
                         </div>
                     </div>
                 </section>
 
-                <!-- RETO PRO Y GENERACIÓN PDF (Se desbloquea en Step 6) -->
                 <section id="reto-pro" data-step="6" class="glass-panel rounded-2xl p-6 md:p-8 border-2 border-orange-500/50 shadow-[0_0_40px_rgba(249,115,22,0.12)] relative overflow-hidden locked-step transition-opacity duration-700">
-                    <div class="absolute -right-12 -top-12 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    
                     <div class="flex justify-between items-start mb-6">
                         <div>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/40 text-orange-300 text-xs font-mono uppercase font-bold mb-2">
-                                <i class="fa-solid fa-fire text-orange-400"></i> Reto Pro
-                            </span>
-                            <h2 class="text-2xl md:text-3xl font-bold text-white">WAF en Código + Auditoría IP</h2>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white"><i class="fa-solid fa-fire text-orange-400 mr-2"></i>WAF en Código + Auditoría IP</h2>
                         </div>
-                        <span class="text-4xl font-black text-orange-500/20">PRO</span>
                     </div>
-
-                    <p class="text-sm text-gray-300 mb-6">Integraremos la validación de Matrícula (IAM) con un WAF geográfico por código. Así bloquearemos tráfico extranjero gratis y guardaremos la IP en nuestra base de datos.</p>
-
+                    <p class="text-sm text-gray-300 mb-6">Agregamos un WAF geográfico por código. Bloquearemos tráfico extranjero y guardaremos la IP real del visitante.</p>
                     <div class="code-block mb-10 border-orange-500/50">
-                        <button class="copy-btn" onclick="copyCode('code-worker-pro', this)"><i class="fa-regular fa-copy"></i> Copiar Código Pro</button>
+                        <button class="copy-btn" onclick="copyCode('code-worker-pro', this)"><i class="fa-regular fa-copy"></i> Copiar Pro</button>
 <pre id="code-worker-pro"><code>export default {
   async fetch(request, env) {
     const pais = request.cf?.country || "Desconocido";
     const ciudad = request.cf?.city || "Desconocida";
     const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
 
-    // WAF EDGE: Bloquear si NO viene de México
-    if (pais !== "MX") {
-      return new Response(`🛑 ACCESO DENEGADO.\nConexión desde ${pais} bloqueada.`, { status: 403 });
-    }
+    if (pais !== "MX") return new Response(`🛑 ACCESO DENEGADO desde ${pais}`, { status: 403 });
 
     if (request.method === "POST") {
       const formData = await request.formData();
@@ -491,20 +356,148 @@
   }
 };</code></pre>
                     </div>
+                </section>
 
-                    <div class="text-center pt-8 border-t border-navy-700">
-                        <h2 class="text-2xl font-bold text-emerald-400 mb-2">¡Laboratorio Completado!</h2>
-                        <p class="text-gray-400 mb-8">Has finalizado satisfactoriamente todas las fases de la infraestructura. Descarga tu comprobante oficial para enviar al instructor.</p>
-                        <button onclick="generarPDF()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:shadow-[0_0_40px_rgba(16,185,129,0.5)] w-full md:w-auto">
-                            <i class="fa-solid fa-file-pdf mr-2"></i>Descargar Reporte de Evidencias (PDF)
+                <!-- MÓDULO VIP CRUD (Se desbloquea en Step 7) -->
+                <section id="modulo-vip" data-step="7" class="glass-panel rounded-2xl p-6 md:p-8 border-2 border-yellow-500/50 shadow-[0_0_50px_rgba(234,179,8,0.15)] relative overflow-hidden locked-step transition-opacity duration-700">
+                    <div class="absolute -right-12 -top-12 w-48 h-48 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-yellow-300 text-xs font-mono uppercase font-bold mb-2">
+                                <i class="fa-solid fa-star text-yellow-400"></i> Bonus Track Exclusivo
+                            </span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white">API RESTful Completa (CRUD)</h2>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-gray-300 mb-6">
+                        Para graduarte como Arquitecto Backend, tu API no solo debe recibir datos (POST). Debe saber enviarlos (GET) y eliminarlos (DELETE). Vamos a crear un <strong>Dashboard de Administración</strong> para que tú mismo borres registros de tu base de datos mundial.
+                    </p>
+
+                    <h3 class="text-lg font-bold text-yellow-400 mb-2">1. Actualizar el Worker (Soporte GET y DELETE)</h3>
+                    <div class="code-block mb-8">
+                        <button class="copy-btn" onclick="copyCode('code-worker-vip', this)"><i class="fa-regular fa-copy"></i> Copiar Full API</button>
+<pre id="code-worker-vip"><code>export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
+    };
+
+    if (request.method === "OPTIONS") return new Response("OK", { headers: corsHeaders });
+
+    // CREATE (POST)
+    if (request.method === "POST") {
+      const formData = await request.formData();
+      const matricula = formData.get("matricula");
+      const registro = { matricula, nombre: "Admin", fecha: new Date().toLocaleString() };
+      await env.CONTACTOS.put(matricula, JSON.stringify(registro));
+      return new Response(`✅ Guardado`, { headers: corsHeaders });
+    }
+
+    // READ (GET)
+    if (request.method === "GET") {
+      const list = await env.CONTACTOS.list();
+      let records = [];
+      for (let key of list.keys) {
+        const value = await env.CONTACTOS.get(key.name);
+        records.push(JSON.parse(value));
+      }
+      return new Response(JSON.stringify(records), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // DELETE (DELETE)
+    if (request.method === "DELETE") {
+      const matriculaABorrar = url.searchParams.get("matricula");
+      if (matriculaABorrar) {
+        await env.CONTACTOS.delete(matriculaABorrar);
+        return new Response(`🗑️ Registro eliminado.`, { headers: corsHeaders });
+      }
+    }
+    return new Response("API CRUD Activa", { headers: corsHeaders });
+  }
+};</code></pre>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-yellow-400 mb-2">2. Crear tu Dashboard Admin (HTML)</h3>
+                    <p class="text-sm text-gray-300 mb-3">En tu GitHub, crea un archivo <code class="bg-navy-800 text-yellow-400 px-1 rounded">dashboard.html</code> y pega esto (reemplaza la URL del Worker):</p>
+                    <div class="code-block mb-8">
+                        <button class="copy-btn" onclick="copyCode('code-dash-vip', this)"><i class="fa-regular fa-copy"></i> Copiar Dashboard HTML</button>
+<pre id="code-dash-vip"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Dashboard Admin&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: sans-serif; background: #0f172a; color: white; padding: 2rem; }
+        .container { max-width: 800px; margin: auto; background: #1e293b; padding: 2rem; border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { border: 1px solid #334155; padding: 12px; text-align: left; }
+        th { background: #0f172a; color: #10b981; }
+        .btn-borrar { background: #ef4444; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;}
+        .btn-act { background: #3b82f6; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer;}
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;h1&gt;Centro de Control REST&lt;/h1&gt;
+        &lt;button class="btn-act" onclick="cargarDatos()"&gt;🔄 Extraer Datos (GET)&lt;/button&gt;
+        &lt;table&gt;
+            &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Matrícula&lt;/th&gt;&lt;th&gt;Datos&lt;/th&gt;&lt;th&gt;Acción&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+            &lt;tbody id="tabla-body"&gt;&lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+        const URL = "https://TU-WORKER.TU-USUARIO.workers.dev"; // Reemplaza aquí
+        
+        async function cargarDatos() {
+            const tbody = document.getElementById("tabla-body");
+            const res = await fetch(URL);
+            const datos = await res.json();
+            tbody.innerHTML = "";
+            datos.forEach(r =&gt; {
+                tbody.innerHTML += `&lt;tr&gt;&lt;td&gt;${r.matricula}&lt;/td&gt;&lt;td&gt;${r.fecha}&lt;/td&gt;
+                &lt;td&gt;&lt;button class="btn-borrar" onclick="borrar('${r.matricula}')"&gt;Eliminar (DELETE)&lt;/button&gt;&lt;/td&gt;&lt;/tr&gt;`;
+            });
+        }
+        async function borrar(matricula) {
+            await fetch(`${URL}?matricula=${matricula}`, { method: "DELETE" });
+            cargarDatos();
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+
+                    <div class="mt-8 p-6 bg-yellow-500/10 border border-yellow-500/30 rounded-xl shadow-lg">
+                        <h4 class="text-yellow-400 font-bold mb-3"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Evidencia VIP CRUD</h4>
+                        <p class="text-xs text-gray-400 mb-2">Entra a tu subdominio de Cloudflare agregando <code>/dashboard.html</code> al final. Pega ese enlace aquí:</p>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="text" id="evidencia-5" placeholder="Ej: https://taller.pages.dev/dashboard.html" class="flex-1 p-3 rounded-lg bg-navy-950 border border-navy-700 text-white outline-none focus:border-yellow-500 transition">
+                            <button onclick="enviarEvidencia(5, 'evidencia-5')" id="btn-ev-5" class="bg-yellow-600 hover:bg-yellow-500 px-6 py-3 rounded-lg text-white font-bold transition">Validar CRUD</button>
+                        </div>
+                    </div>
+
+                    <div class="text-center pt-8 mt-12 border-t border-navy-700">
+                        <h2 class="text-2xl font-bold text-emerald-400 mb-2">¡Todo el Laboratorio Completado!</h2>
+                        <button onclick="generarPDF()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-lg w-full md:w-auto">
+                            <i class="fa-solid fa-file-pdf mr-2"></i>Descargar PDF con Módulo VIP
                         </button>
                     </div>
                 </section>
 
+                <div class="text-center pt-8 border-t border-navy-700 locked-step" id="btn-pdf-normal" data-step="6">
+                    <button onclick="generarPDF()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition shadow-[0_0_30px_rgba(16,185,129,0.3)] w-full md:w-auto">
+                        <i class="fa-solid fa-file-pdf mr-2"></i>Descargar Reporte de Evidencias (PDF)
+                    </button>
+                </div>
+
             </main>
         </div>
 
-        <!-- Div Oculto para Renderizar el PDF -->
         <div id="pdf-content" class="no-print" style="display:none; background: white; color: black; padding: 40px; font-family: sans-serif; width: 800px;">
             <div style="border-bottom: 3px solid #10b981; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
                 <div>
@@ -532,6 +525,9 @@
             
             <h3 style="color: #475569; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-top: 20px;">4. Código Desplegado en el Borde (Worker JS)</h3>
             <pre style="background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 10px; white-space: pre-wrap; overflow-x: hidden;" id="pdf-ev-4"></pre>
+
+            <h3 style="color: #475569; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-top: 20px;">5. Panel de Control de BD (Bonus CRUD)</h3>
+            <p style="background: #fefce8; padding: 10px; border-radius: 5px; border: 1px dashed #eab308; font-family: monospace; font-size: 12px; color: #ca8a04;" id="pdf-ev-5"></p>
         </div>
 
     </div>
@@ -572,7 +568,7 @@
                     btn.innerHTML = 'Desbloquear Laboratorio';
                 }
             } catch(e) {
-                errorTxt.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Error de conexión al servidor maestro.`;
+                errorTxt.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Error de red.`;
                 errorTxt.classList.remove("hidden");
                 btn.innerHTML = 'Desbloquear Laboratorio';
             }
@@ -584,9 +580,9 @@
             document.getElementById("dashboard-screen").classList.add("flex");
             document.getElementById("nombre-alumno").innerText = nombreActual;
             
-            for(let i=1; i<=4; i++){
+            for(let i=1; i<=5; i++){
                 const val = localStorage.getItem(`cesba_ev_${i}`);
-                if(val) {
+                if(val && document.getElementById(`evidencia-${i}`)) {
                     document.getElementById(`evidencia-${i}`).value = val;
                     const b = document.getElementById(`btn-ev-${i}`);
                     b.innerHTML = '<i class="fa-solid fa-check"></i> Guardado';
@@ -594,22 +590,23 @@
                     b.classList.replace("bg-orange-600", "bg-emerald-600");
                     b.classList.replace("bg-emerald-600", "bg-emerald-600"); 
                     b.classList.replace("bg-blue-600", "bg-emerald-600");
+                    b.classList.replace("bg-yellow-600", "bg-emerald-600");
                 }
             }
 
             updateProgressUI();
             sincronizarConInstructor();
-            setInterval(sincronizarConInstructor, 5000); // Polling cada 5 seg
+            setInterval(sincronizarConInstructor, 5000); 
         }
 
         function updateProgressUI() {
             let count = 0;
-            for(let i=1; i<=4; i++) {
+            for(let i=1; i<=5; i++) {
                 if(localStorage.getItem(`cesba_ev_${i}`)) count++;
             }
-            const percentage = Math.round((count / 4) * 100);
+            const percentage = Math.round((count / 5) * 100);
             document.getElementById('progress-bar').style.width = percentage + '%';
-            document.getElementById('progress-text').innerText = `${count}/4`;
+            document.getElementById('progress-text').innerText = `${count}/5`;
         }
 
         async function sincronizarConInstructor() {
@@ -619,13 +616,11 @@
                 if(data.status === "success") {
                     desbloquearPasos(data.current_step);
                 }
-            } catch(e) {
-                console.log("Esperando conexión...");
-            }
+            } catch(e) {}
         }
 
         function desbloquearPasos(pasoActual) {
-            document.querySelectorAll('section[data-step]').forEach(section => {
+            document.querySelectorAll('section[data-step], div[data-step]').forEach(section => {
                 const sectionStep = parseInt(section.getAttribute('data-step'));
                 if (sectionStep <= pasoActual) {
                     section.classList.remove('locked-step');
@@ -634,7 +629,14 @@
                 }
             });
 
-            for(let i = 1; i <= 6; i++) {
+            // Si llegamos al 7, ocultamos el boton de PDF normal
+            if(pasoActual >= 7) {
+                document.getElementById('btn-pdf-normal').classList.add('hidden');
+            } else {
+                document.getElementById('btn-pdf-normal').classList.remove('hidden');
+            }
+
+            for(let i = 1; i <= 7; i++) {
                 const icon = document.querySelector(`.icon-nav-${i}`);
                 if(!icon) continue;
                 if(i <= pasoActual) {
@@ -663,10 +665,7 @@
                 localStorage.setItem(`cesba_ev_${paso}`, evidencia);
                 
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> Guardado';
-                btn.classList.replace("bg-purple-600", "bg-emerald-600");
-                btn.classList.replace("bg-orange-600", "bg-emerald-600");
-                btn.classList.replace("bg-emerald-600", "bg-emerald-600"); 
-                btn.classList.replace("bg-blue-600", "bg-emerald-600");
+                btn.className = "bg-emerald-600 hover:bg-emerald-500 px-6 py-3 rounded-lg text-white font-bold transition whitespace-nowrap";
                 
                 updateProgressUI();
             } catch(e) {
@@ -683,6 +682,7 @@
             document.getElementById('pdf-ev-2').innerText = localStorage.getItem("cesba_ev_2") || "No entregada";
             document.getElementById('pdf-ev-3').innerText = localStorage.getItem("cesba_ev_3") || "No entregada";
             document.getElementById('pdf-ev-4').innerText = localStorage.getItem("cesba_ev_4") || "No entregada";
+            document.getElementById('pdf-ev-5').innerText = localStorage.getItem("cesba_ev_5") || "No entregada (Módulo Opcional)";
 
             const elemento = document.getElementById('pdf-content');
             elemento.style.display = 'block';
@@ -713,8 +713,6 @@
             });
         }
     </script>
-
-    <!-- SCRIPT ANTI-INSPECCIÓN -->
     <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', (e) => {
