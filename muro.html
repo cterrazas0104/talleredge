@@ -8,9 +8,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        body { 
+            background-color: #0f172a; color: white; font-family: 'Inter', sans-serif; 
+            /* BLINDAJE ANTI-COPIA */
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; 
+        }
+        input, textarea, pre, code, .copy-btn { 
+            -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; 
+        }
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        /* Plantilla oculta para el PDF */
         #pdf-template { display: none; }
     </style>
 </head>
@@ -25,7 +31,7 @@
 
     <!-- Grid donde aparecerán los alumnos -->
     <div id="grid-alumnos" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        <div class="col-span-3 text-center text-gray-500 animate-pulse">Esperando conexiones...</div>
+        <div class="col-span-3 text-center text-gray-500 animate-pulse">Esperando conexiones de la API...</div>
     </div>
 
     <!-- Plantilla de Certificado para generar el PDF (Oculta en pantalla) -->
@@ -44,7 +50,6 @@
     </div>
 
     <script>
-        // REEMPLAZA ESTO CON LA URL DE TU SCRIPT DE GOOGLE
         const API_URL = "https://script.google.com/macros/s/AKfycbyCP0zlB95ADZk1kOZ5qZFh7LSHfMUwi0S3bPFLXai2TXCQw_guuO3-PpvGf3Y_LMPPBQ/exec";
 
         async function cargarMuro() {
@@ -63,8 +68,8 @@
                             <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mb-4 border border-emerald-500/50">
                                 <i class="fa-solid fa-user-astronaut"></i>
                             </div>
-<h3 class="text-xl font-bold text-white mb-1 truncate w-full">${alumno.nombre}</h3>
-<p class="text-xs text-purple-400 mb-4 truncate w-full font-mono tracking-widest">MATRÍCULA: ${alumno.matricula}</p>
+                            <h3 class="text-xl font-bold text-white mb-1 truncate w-full">${alumno.nombre}</h3>
+                            <p class="text-xs text-purple-400 mb-4 truncate w-full font-mono tracking-widest">MATRÍCULA: ${alumno.matricula}</p>
                             <button onclick="descargarPDF('${alumno.nombre}')" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition w-full">
                                 <i class="fa-solid fa-download mr-2"></i>Descargar PDF
                             </button>
@@ -77,11 +82,9 @@
         }
 
         function descargarPDF(nombre) {
-            // Inyectar el nombre en la plantilla oculta
             document.getElementById('cert-nombre').innerText = nombre;
             const elemento = document.getElementById('certificado-content');
             
-            // Configuración del PDF
             const opt = {
                 margin:       0,
                 filename:     `Certificado_Edge_${nombre.replace(/\s+/g, '_')}.pdf`,
@@ -90,16 +93,24 @@
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
             };
 
-            // Generar y descargar (forzamos que el div sea visible temporalmente para renderizar)
             elemento.parentElement.style.display = 'block';
             html2pdf().set(opt).from(elemento).save().then(() => {
                 elemento.parentElement.style.display = 'none';
             });
         }
 
-        // Cargar datos inmediatamente y luego cada 5 segundos
         cargarMuro();
         setInterval(cargarMuro, 5000);
+    </script>
+    
+    <!-- SCRIPT ANTI-INSPECCIÓN -->
+    <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.shiftKey && e.key === 'C') || (e.ctrlKey && (e.key === 'u' || e.key === 'U')) || (e.ctrlKey && (e.key === 's' || e.key === 'S')) || (e.ctrlKey && (e.key === 'p' || e.key === 'P'))) {
+                e.preventDefault(); return false;
+            }
+        });
     </script>
 </body>
 </html>
