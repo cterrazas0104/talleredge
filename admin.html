@@ -5,16 +5,10 @@
     <title>Panel de Control - Instructor CESBA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>body { background-color: #0f172a; color: white; font-family: sans-serif; -webkit-user-select: none; 
-            -moz-user-select: none; 
-            -ms-user-select: none; 
-            user-select: none;}/* Excepciones necesarias para que el taller funcione */
-        input, textarea, pre, code, .copy-btn { 
-            -webkit-user-select: text; 
-            -moz-user-select: text; 
-            -ms-user-select: text; 
-            user-select: text; 
-        }</style>
+    <style>
+        body { background-color: #0f172a; color: white; font-family: sans-serif; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;}
+        input, textarea, pre, code, .copy-btn { -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; }
+    </style>
 </head>
 <body class="p-4 md:p-8 flex flex-col items-center min-h-screen">
 
@@ -49,6 +43,10 @@
             </button>
             <button onclick="setStep(6)" class="p-4 bg-purple-900/50 hover:bg-purple-600 border border-purple-500/30 rounded-xl text-left font-bold transition flex justify-between items-center group">
                 <span class="text-purple-200">6. Liberar: Reto Pro y PDF Final</span><i class="fa-solid fa-trophy group-hover:scale-125 transition text-purple-300"></i>
+            </button>
+            <!-- BOTÓN DEL BONUS VIP -->
+            <button onclick="setStep(7)" class="p-4 bg-yellow-900/40 hover:bg-yellow-600 border border-yellow-500/50 rounded-xl text-left font-bold transition flex justify-between items-center group mt-2 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
+                <span class="text-yellow-400">7. Liberar BONUS VIP: Dashboard CRUD</span><i class="fa-solid fa-star group-hover:scale-125 transition text-yellow-400"></i>
             </button>
         </div>
 
@@ -89,22 +87,10 @@
     </script>
     <!-- SCRIPT ANTI-INSPECCIÓN -->
     <script>
-        // 1. Bloquear el menú de clic derecho
         document.addEventListener('contextmenu', event => event.preventDefault());
-
-        // 2. Bloquear atajos de teclado (F12, Ctrl+U, Ctrl+Shift+I, Ctrl+S)
         document.addEventListener('keydown', (e) => {
-            if (
-                e.key === 'F12' || 
-                (e.ctrlKey && e.shiftKey && e.key === 'I') || // DevTools
-                (e.ctrlKey && e.shiftKey && e.key === 'J') || // Consola
-                (e.ctrlKey && e.shiftKey && e.key === 'C') || // Inspector
-                (e.ctrlKey && (e.key === 'u' || e.key === 'U')) || // Ver código fuente
-                (e.ctrlKey && (e.key === 's' || e.key === 'S')) || // Guardar página
-                (e.ctrlKey && (e.key === 'p' || e.key === 'P'))    // Imprimir (excepto con tu botón)
-            ) {
-                e.preventDefault();
-                return false;
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.shiftKey && e.key === 'C') || (e.ctrlKey && (e.key === 'u' || e.key === 'U')) || (e.ctrlKey && (e.key === 's' || e.key === 'S')) || (e.ctrlKey && (e.key === 'p' || e.key === 'P'))) {
+                e.preventDefault(); return false;
             }
         });
     </script>
