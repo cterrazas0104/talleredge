@@ -7,27 +7,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>body { background-color: #0f172a; color: white; font-family: sans-serif; }</style>
 </head>
-<body class="p-8 flex flex-col items-center">
+<body class="p-4 md:p-8 flex flex-col items-center min-h-screen">
 
-    <div class="max-w-2xl w-full bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl">
-        <h1 class="text-3xl font-bold text-orange-400 mb-2"><i class="fa-solid fa-gamepad"></i> Panel de Mando</h1>
-        <p class="text-slate-400 mb-8">Controla el ritmo del taller. Los alumnos no verán el siguiente paso hasta que tú lo liberes aquí.</p>
+    <div class="max-w-xl w-full bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl">
+        <h1 class="text-3xl font-bold text-orange-400 mb-2"><i class="fa-solid fa-gamepad"></i> Centro de Mando</h1>
+        <p class="text-slate-400 mb-6 text-sm">Controla las pantallas de tus alumnos en tiempo real.</p>
 
-        <div class="grid grid-cols-1 gap-4">
+        <!-- Contraseña -->
+        <div class="mb-6 bg-slate-900 p-4 rounded-xl border border-slate-700 flex gap-3">
+            <i class="fa-solid fa-key text-slate-500 mt-3"></i>
+            <input type="password" id="admin-pass" placeholder="Contraseña de Administrador" class="flex-1 bg-transparent outline-none text-white font-mono tracking-widest">
+        </div>
+
+        <div class="grid grid-cols-1 gap-3">
+            <button onclick="setStep(0)" class="p-4 bg-red-900/50 hover:bg-red-600 border border-red-500/30 rounded-xl text-left font-bold transition flex justify-between items-center group">
+                <span class="text-red-200">0. BLOQUEAR TODO (Pantalla de Espera)</span><i class="fa-solid fa-lock group-hover:scale-125 transition text-red-300"></i>
+            </button>
             <button onclick="setStep(1)" class="p-4 bg-slate-700 hover:bg-emerald-600 rounded-xl text-left font-bold transition flex justify-between items-center group">
-                <span>1. Liberar: GitHub y Repositorios</span><i class="fa-solid fa-unlock group-hover:scale-125 transition"></i>
+                <span>1. Liberar: Requisitos Previos</span><i class="fa-solid fa-unlock group-hover:scale-125 transition"></i>
             </button>
             <button onclick="setStep(2)" class="p-4 bg-slate-700 hover:bg-emerald-600 rounded-xl text-left font-bold transition flex justify-between items-center group">
-                <span>2. Liberar: CI/CD y Cloudflare Pages</span><i class="fa-solid fa-unlock group-hover:scale-125 transition"></i>
+                <span>2. Liberar: Fase 1 y 2 (Identidad y GitHub)</span><i class="fa-solid fa-unlock group-hover:scale-125 transition"></i>
             </button>
             <button onclick="setStep(3)" class="p-4 bg-slate-700 hover:bg-emerald-600 rounded-xl text-left font-bold transition flex justify-between items-center group">
-                <span>3. Liberar: Hardening WAF</span><i class="fa-solid fa-unlock group-hover:scale-125 transition"></i>
+                <span>3. Liberar: Fase 3 (Cloudflare Pages CI/CD)</span><i class="fa-solid fa-unlock group-hover:scale-125 transition"></i>
             </button>
             <button onclick="setStep(4)" class="p-4 bg-slate-700 hover:bg-emerald-600 rounded-xl text-left font-bold transition flex justify-between items-center group">
-                <span>4. Liberar: Serverless Workers + KV</span><i class="fa-solid fa-unlock group-hover:scale-125 transition"></i>
+                <span>4. Liberar: Fase 4 (Ciberseguridad WAF)</span><i class="fa-solid fa-unlock group-hover:scale-125 transition"></i>
             </button>
-            <button onclick="setStep(5)" class="p-4 bg-slate-700 hover:bg-purple-600 rounded-xl text-left font-bold transition flex justify-between items-center group">
-                <span class="text-purple-300">5. Liberar: Reto Pro y Generación de PDF</span><i class="fa-solid fa-trophy group-hover:scale-125 transition text-purple-300"></i>
+            <button onclick="setStep(5)" class="p-4 bg-slate-700 hover:bg-emerald-600 rounded-xl text-left font-bold transition flex justify-between items-center group">
+                <span>5. Liberar: Fase 5 (Serverless Workers + KV)</span><i class="fa-solid fa-unlock group-hover:scale-125 transition"></i>
+            </button>
+            <button onclick="setStep(6)" class="p-4 bg-purple-900/50 hover:bg-purple-600 border border-purple-500/30 rounded-xl text-left font-bold transition flex justify-between items-center group">
+                <span class="text-purple-200">6. Liberar: Reto Pro y PDF Final</span><i class="fa-solid fa-trophy group-hover:scale-125 transition text-purple-300"></i>
             </button>
         </div>
 
@@ -39,17 +51,27 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbyCP0zlB95ADZk1kOZ5qZFh7LSHfMUwi0S3bPFLXai2TXCQw_guuO3-PpvGf3Y_LMPPBQ/exec";
 
         async function setStep(stepNumber) {
+            const pass = document.getElementById('admin-pass').value;
             const status = document.getElementById('status');
-            status.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Actualizando todas las pantallas a Paso ${stepNumber}...`;
+            
+            if (!pass) {
+                status.innerHTML = `<span class="text-red-400"><i class="fa-solid fa-circle-exclamation"></i> Ingresa la contraseña primero.</span>`;
+                return;
+            }
+
+            status.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Actualizando Mando Central...`;
             
             try {
                 const req = await fetch(API_URL, {
                     method: "POST",
-                    body: JSON.stringify({ action: "set_step", new_step: stepNumber })
+                    body: JSON.stringify({ action: "set_step", new_step: stepNumber, password: pass })
                 });
                 const res = await req.json();
+                
                 if (res.status === "success") {
-                    status.innerHTML = `<i class="fa-solid fa-check"></i> ¡Alumnos desbloqueados en el Paso ${stepNumber}!`;
+                    status.innerHTML = `<i class="fa-solid fa-check"></i> ¡Pantallas de alumnos ajustadas al Paso ${stepNumber}!`;
+                } else {
+                    status.innerHTML = `<span class="text-red-400"><i class="fa-solid fa-circle-xmark"></i> ${res.message}</span>`;
                 }
             } catch (e) {
                 status.innerHTML = `<span class="text-red-400">Error de red. Intenta de nuevo.</span>`;
