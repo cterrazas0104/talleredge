@@ -17,7 +17,9 @@
             -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text; 
         }
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        #pdf-template { display: none; }
+        
+        /* Ocultamos la plantilla del DOM principal pero permitimos que html2pdf la lea */
+        #pdf-template { display: none; position: absolute; left: -9999px; top: -9999px; }
     </style>
 </head>
 <body class="p-8">
@@ -34,22 +36,34 @@
         <div class="col-span-3 text-center text-gray-500 animate-pulse">Esperando conexiones de la API...</div>
     </div>
 
-    <!-- Plantilla de Certificado para generar el PDF (Oculta en pantalla) -->
+    <!-- Plantilla de Certificado con dimensiones exactas Carta Horizontal -->
     <div id="pdf-template">
-        <div id="certificado-content" style="padding: 40px; font-family: sans-serif; text-align: center; background: white; color: #0f172a; border: 10px solid #8b5cf6; height: 100%; box-sizing: border-box;">
-            <h2 style="color: #8b5cf6; font-size: 24px; text-transform: uppercase; letter-spacing: 2px;">Jornada Tecnológica 2026</h2>
-            <h1 style="font-size: 40px; margin: 20px 0;">Certificado de Despliegue</h1>
-            <p style="font-size: 18px; color: #475569;">Se otorga el presente reconocimiento a:</p>
-            <h3 id="cert-nombre" style="font-size: 32px; color: #10b981; margin: 10px 0;">Nombre del Alumno</h3>
-            <p style="font-size: 16px; line-height: 1.6; color: #334155;">Por haber desplegado exitosamente infraestructura Web Edge, CI/CD, configuración de ciberseguridad WAF y backend Serverless (Workers + KV).</p>
-            <div style="margin-top: 40px; border-top: 2px solid #e2e8f0; display: inline-block; padding-top: 10px;">
-                <p style="font-weight: bold; margin: 0;">Mtro. César Gabriel Terrazas Zarazúa</p>
-                <p style="font-size: 12px; color: #64748b; margin: 0;">Instructor - CESBA</p>
+        <div id="certificado-content" style="width: 1056px; height: 816px; padding: 60px; font-family: sans-serif; text-align: center; background: white; color: #0f172a; border: 16px solid #8b5cf6; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
+            
+            <h2 style="color: #8b5cf6; font-size: 26px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; font-weight: bold;">Jornada Tecnológica CESBA 2026</h2>
+            <h1 style="font-size: 55px; margin: 10px 0 30px 0; font-weight: 900; color: #0f172a;">Certificado de Despliegue</h1>
+            
+            <p style="font-size: 22px; color: #475569; margin-bottom: 15px;">Se otorga el presente reconocimiento a:</p>
+            <h3 id="cert-nombre" style="font-size: 45px; color: #10b981; margin: 10px 0; font-weight: bold; border-bottom: 2px solid #10b981; padding-bottom: 10px; display: inline-block;">Nombre del Alumno</h3>
+            
+            <p style="font-size: 18px; line-height: 1.8; color: #334155; max-width: 800px; margin: 30px auto;">Por haber resuelto exitosamente el reto práctico, configurando despliegues Edge, integración continua (CI/CD), políticas de ciberseguridad perimetral (WAF) y construcción de una API RESTful Serverless.</p>
+            
+            <div style="margin-top: 50px; border-top: 2px solid #cbd5e1; display: inline-block; padding-top: 15px; width: 400px;">
+                <p style="font-weight: bold; margin: 0; font-size: 20px;">Mtro. César Gabriel Terrazas Zarazúa</p>
+                <p style="font-size: 14px; color: #64748b; margin: 5px 0 0 0; text-transform: uppercase; letter-spacing: 1px;">Instructor de Infraestructura Web</p>
             </div>
+
+            <!-- Sello VIP del Chocolate -->
+            <div style="position: absolute; bottom: 40px; right: 50px; background: #fef3c7; color: #b45309; padding: 15px 25px; border-radius: 12px; border: 3px dashed #f59e0b; font-weight: 900; font-size: 18px; transform: rotate(-5deg); box-shadow: 4px 4px 0px #fcd34d;">
+                🍫 VÁLIDO POR 1 CHOCOLATE
+                <div style="font-size: 11px; font-weight: normal; margin-top: 5px; color: #d97706;">*Canjeable exclusivamente con el instructor.</div>
+            </div>
+            
         </div>
     </div>
 
     <script>
+        // PEGA AQUÍ LA URL DE TU SCRIPT DE GOOGLE
         const API_URL = "https://script.google.com/macros/s/AKfycbyCP0zlB95ADZk1kOZ5qZFh7LSHfMUwi0S3bPFLXai2TXCQw_guuO3-PpvGf3Y_LMPPBQ/exec";
 
         async function cargarMuro() {
@@ -64,14 +78,14 @@
                 // Invertimos para ver a los más recientes arriba
                 data.reverse().forEach(alumno => {
                     grid.innerHTML += `
-                        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between items-center text-center transform transition hover:scale-105">
-                            <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mb-4 border border-emerald-500/50">
+                        <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between items-center text-center transform transition hover:scale-105 hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(139,92,246,0.2)]">
+                            <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl mb-4 border border-emerald-500/50 shadow-inner">
                                 <i class="fa-solid fa-user-astronaut"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-1 truncate w-full">${alumno.nombre}</h3>
+                            <h3 class="text-xl font-bold text-white mb-1 truncate w-full" title="${alumno.nombre}">${alumno.nombre}</h3>
                             <p class="text-xs text-purple-400 mb-4 truncate w-full font-mono tracking-widest">MATRÍCULA: ${alumno.matricula}</p>
-                            <button onclick="descargarPDF('${alumno.nombre}')" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition w-full">
-                                <i class="fa-solid fa-download mr-2"></i>Descargar PDF
+                            <button onclick="descargarPDF('${alumno.nombre.replace(/'/g, "\\'")}')" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition w-full shadow-lg">
+                                <i class="fa-solid fa-certificate mr-2"></i>Obtener Diploma
                             </button>
                         </div>
                     `;
@@ -83,19 +97,24 @@
 
         function descargarPDF(nombre) {
             document.getElementById('cert-nombre').innerText = nombre;
+            
+            // Extraemos temporalmente el template de su escondite
+            const template = document.getElementById('pdf-template');
+            template.style.display = 'block';
+            
             const elemento = document.getElementById('certificado-content');
             
             const opt = {
                 margin:       0,
-                filename:     `Certificado_Edge_${nombre.replace(/\s+/g, '_')}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+                filename:     `Diploma_Edge_${nombre.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 1 },
+                html2canvas:  { scale: 2, useCORS: true, windowWidth: 1056 }, // Forzamos el ancho del canvas
+                jsPDF:        { unit: 'px', format: [1056, 816], orientation: 'landscape' } // Dimensiones exactas
             };
 
-            elemento.parentElement.style.display = 'block';
+            // Generamos el PDF y volvemos a esconder el template
             html2pdf().set(opt).from(elemento).save().then(() => {
-                elemento.parentElement.style.display = 'none';
+                template.style.display = 'none';
             });
         }
 
