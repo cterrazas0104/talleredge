@@ -217,7 +217,7 @@
                     </div>
                 </section>
 
-               <!-- PASO 4 (Se desbloquea en Step 4) -->
+<!-- PASO 4 (Se desbloquea en Step 4) -->
                 <section id="paso-4" data-step="4" class="glass-panel rounded-2xl p-6 md:p-8 border border-navy-700 locked-step transition-opacity duration-700">
                     <div class="flex justify-between items-start mb-6">
                         <div>
@@ -236,7 +236,7 @@
                             <span class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
                             <div class="text-sm">
                                 <h4 class="font-bold text-white">Activa tu VPN y ataca tu propio sitio</h4>
-                                <p class="text-gray-400 text-xs mt-1">Usa una VPN (ej. Opera Browser) y conéctate desde Europa o EE. UU. Intenta entrar a tu propio enlace <code class="text-emerald-400">.pages.dev</code>. Verás que te deja pasar sin problemas (es vulnerable a tráfico de cualquier país).</p>
+                                <p class="text-gray-400 text-xs mt-1">Intenta entrar a tu propio enlace <code class="text-emerald-400">.pages.dev</code>. ¿Es vulnerable a tráfico de cualquier lugar?</p>
                             </div>
                         </div>
 
@@ -244,7 +244,7 @@
                             <span class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
                             <div class="text-sm">
                                 <h4 class="font-bold text-white">Ataca el dominio del Instructor</h4>
-                                <p class="text-gray-400 text-xs mt-1">Con la VPN extranjera aún encendida, intenta entrar al enlace oficial del taller: <a href="https://talleredge.yoresuelvo.com.mx/lms" target="_blank" class="text-purple-400 underline">talleredge.yoresuelvo.com.mx/lms</a>. ¡Boom! El WAF perimetral analizará tu IP falsa y te frenará en la Capa 7 antes de tocar el servidor.</p>
+                                <p class="text-gray-400 text-xs mt-1">Intenta entrar al enlace oficial del taller: <a href="https://talleredge.yoresuelvo.com.mx/lms" target="_blank" class="text-purple-400 underline">talleredge.yoresuelvo.com.mx/lms</a>. ¡Boom! El WAF perimetral analizará tu IP falsa y te frenará en la Capa 7 antes de tocar el servidor.</p>
                             </div>
                         </div>
                     </div>
@@ -252,7 +252,7 @@
                     <!-- EVIDENCIA LMS 3 -->
                     <div class="mt-8 p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-xl shadow-lg">
                         <h4 class="text-emerald-400 font-bold mb-3 flex items-center"><i class="fa-solid fa-cloud-arrow-up mr-2 text-lg"></i>Evidencia de la Fase 4</h4>
-                        <p class="text-xs text-gray-400 mb-4">Después de realizar el ataque simulado al dominio del instructor, ¿cuál fue el código de estado HTTP exacto que te devolvió el firewall al bloquearte?</p>
+                       <p class="text-xs text-gray-400 mb-4">La pantalla de Cloudflare te ha bloqueado amigablemente sin mostrar el número técnico. Revisa tu <strong>Tarjeta de Apoyo (Cheat Sheet)</strong>: ¿Cuál es el código de estado HTTP estándar que los servidores devuelven cuando un WAF bloquea el acceso?</p>
                         <div class="flex flex-col sm:flex-row gap-3">
                             <input type="text" id="evidencia-3" placeholder="Ej: 404, 500, etc." class="flex-1 p-3 rounded-lg bg-navy-950 border border-navy-700 text-white outline-none focus:border-emerald-500 transition">
                             <button onclick="enviarEvidencia(3, 'evidencia-3')" id="btn-ev-3" class="bg-emerald-600 hover:bg-emerald-500 px-6 py-3 rounded-lg text-white font-bold transition whitespace-nowrap">Guardar Evidencia</button>
