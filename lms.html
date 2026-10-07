@@ -37,7 +37,6 @@
         .step-check:checked + div .check-title { text-decoration: line-through; color: #94a3b8; }
         .locked-step { display: none !important; }
 
-        /* Estilos para que el PDF salga impecable y muestre lo que escribieron en las cajas */
         @media print { 
             body { background-color: #0a0f1d !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } 
             .no-print { display: none !important; } 
@@ -48,7 +47,6 @@
 </head>
 <body class="antialiased selection:bg-purple-500 selection:text-white relative min-h-screen flex flex-col">
 
-    <!-- PANTALLA DE LOGIN -->
     <div id="login-screen" class="absolute inset-0 z-[100] bg-navy-950 flex items-center justify-center p-4">
         <div class="max-w-md w-full glass-panel p-8 rounded-2xl text-center shadow-[0_0_50px_rgba(16,185,129,0.1)] border-emerald-500/30 border-2">
             <div class="w-20 h-20 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-4xl mx-auto mb-6 border border-emerald-500/40 shadow-inner">
@@ -63,7 +61,6 @@
         </div>
     </div>
 
-    <!-- CONTENEDOR PRINCIPAL DEL MANUAL -->
     <div id="dashboard-screen" class="hidden flex-1 flex flex-col relative">
 
         <div class="fixed top-0 left-0 w-full h-1 bg-navy-800 z-50 no-print">
@@ -222,7 +219,6 @@
                     </div>
                 </section>
 
-                <!-- PASO 4 (Se desbloquea en Step 4) -->
                 <section id="paso-4" data-step="4" class="glass-panel rounded-2xl p-6 md:p-8 border border-navy-700 locked-step transition-opacity duration-700">
                     <div class="flex justify-between items-start mb-6">
                         <div>
@@ -385,7 +381,6 @@
 };</code></pre>
                     </div>
 
-                    <!-- CAJA DE EVIDENCIA FASE 6 AÑADIDA -->
                     <div class="mt-8 p-6 bg-orange-500/10 border border-orange-500/30 rounded-xl shadow-lg">
                         <h4 class="text-orange-400 font-bold mb-3"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Evidencia del Reto Pro</h4>
                         <p class="text-xs text-gray-400 mb-2">Pega aquí el código de tu Worker con el WAF integrado para validar tu reto.</p>
@@ -410,10 +405,10 @@
                     </div>
 
                     <p class="text-sm text-gray-300 mb-6">
-                        Para graduarte como Arquitecto Backend, tu API no solo debe recibir datos (POST). Debe saber enviarlos (GET) y eliminarlos (DELETE). Vamos a crear un <strong>Dashboard de Administración</strong> para que tú mismo borres registros de tu base de datos mundial.
+                        Para graduarte como Arquitecto Backend, tu API no solo debe recibir datos (POST). Debe saber enviarlos (GET), actualizarlos (PUT) y eliminarlos (DELETE). Vamos a crear un <strong>Dashboard de Administración</strong> para que tú mismo operes tu base de datos mundial.
                     </p>
 
-                    <h3 class="text-lg font-bold text-yellow-400 mb-2">1. Actualizar el Worker (Soporte GET y DELETE)</h3>
+                    <h3 class="text-lg font-bold text-yellow-400 mb-2">1. Actualizar el Worker (Soporte GET, PUT y DELETE)</h3>
                     <div class="code-block mb-8">
                         <button class="copy-btn no-print" onclick="copyCode('code-worker-vip', this)"><i class="fa-regular fa-copy"></i> Copiar Full API</button>
 <pre id="code-worker-vip"><code>export default {
@@ -421,7 +416,7 @@
     const url = new URL(request.url);
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type"
     };
 
@@ -445,6 +440,17 @@
         records.push(JSON.parse(value));
       }
       return new Response(JSON.stringify(records), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // UPDATE (PUT)
+    if (request.method === "PUT") {
+      const body = await request.json();
+      if (body.matricula && body.nombre) {
+        const registro = { matricula: body.matricula, nombre: body.nombre, fecha: new Date().toLocaleString() };
+        await env.CONTACTOS.put(body.matricula, JSON.stringify(registro));
+        return new Response(`✅ Actualizado`, { headers: corsHeaders });
+      }
+      return new Response("Faltan datos", { status: 400, headers: corsHeaders });
     }
 
     // DELETE (DELETE)
@@ -476,6 +482,7 @@
         th, td { border: 1px solid #334155; padding: 12px; text-align: left; }
         th { background: #0f172a; color: #10b981; }
         .btn-borrar { background: #ef4444; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;}
+        .btn-editar { background: #eab308; color: #0f172a; font-weight: bold; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-right: 8px;}
         .btn-act { background: #3b82f6; color: white; padding: 10px; border: none; border-radius: 4px; cursor: pointer;}
     &lt;/style&gt;
 &lt;/head&gt;
@@ -484,7 +491,7 @@
         &lt;h1&gt;Centro de Control REST&lt;/h1&gt;
         &lt;button class="btn-act" onclick="cargarDatos()"&gt;🔄 Extraer Datos (GET)&lt;/button&gt;
         &lt;table&gt;
-            &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Matrícula&lt;/th&gt;&lt;th&gt;Datos&lt;/th&gt;&lt;th&gt;Acción&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+            &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Matrícula&lt;/th&gt;&lt;th&gt;Nombre&lt;/th&gt;&lt;th&gt;Fecha&lt;/th&gt;&lt;th&gt;Acciones&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
             &lt;tbody id="tabla-body"&gt;&lt;/tbody&gt;
         &lt;/table&gt;
     &lt;/div&gt;
@@ -497,20 +504,41 @@
             const datos = await res.json();
             tbody.innerHTML = "";
             datos.forEach(r =&gt; {
-                tbody.innerHTML += `&lt;tr&gt;&lt;td&gt;${r.matricula}&lt;/td&gt;&lt;td&gt;${r.fecha}&lt;/td&gt;
-                &lt;td&gt;&lt;button class="btn-borrar" onclick="borrar('${r.matricula}')"&gt;Eliminar (DELETE)&lt;/button&gt;&lt;/td&gt;&lt;/tr&gt;`;
+                tbody.innerHTML += `&lt;tr&gt;
+                    &lt;td&gt;${r.matricula}&lt;/td&gt;
+                    &lt;td&gt;${r.nombre}&lt;/td&gt;
+                    &lt;td&gt;${r.fecha}&lt;/td&gt;
+                    &lt;td&gt;
+                        &lt;button class="btn-editar" onclick="editar('${r.matricula}', '${r.nombre}')"&gt;✏️ Editar&lt;/button&gt;
+                        &lt;button class="btn-borrar" onclick="borrar('${r.matricula}')"&gt;🗑️ Eliminar&lt;/button&gt;
+                    &lt;/td&gt;
+                &lt;/tr&gt;`;
             });
         }
+
+        async function editar(matricula, nombreActual) {
+            const nuevoNombre = prompt(`Ingresa el nuevo nombre para la matrícula ${matricula}:`, nombreActual);
+            if (nuevoNombre && nuevoNombre !== nombreActual) {
+                await fetch(URL, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ matricula: matricula, nombre: nuevoNombre })
+                });
+                cargarDatos();
+            }
+        }
+
         async function borrar(matricula) {
-            await fetch(`${URL}?matricula=${matricula}`, { method: "DELETE" });
-            cargarDatos();
+            if(confirm(`¿Seguro que deseas borrar la matrícula ${matricula}?`)) {
+                await fetch(`${URL}?matricula=${matricula}`, { method: "DELETE" });
+                cargarDatos();
+            }
         }
     &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
                     </div>
 
-                    <!-- EVIDENCIA VIP AHORA ES LA 6 -->
                     <div class="mt-8 p-6 bg-yellow-500/10 border border-yellow-500/30 rounded-xl shadow-lg">
                         <h4 class="text-yellow-400 font-bold mb-3"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Evidencia VIP CRUD</h4>
                         <p class="text-xs text-gray-400 mb-2">Entra a tu subdominio de Cloudflare agregando <code>/dashboard.html</code> al final. Pega ese enlace aquí:</p>
@@ -587,7 +615,6 @@
             document.getElementById("dashboard-screen").classList.add("flex");
             document.getElementById("nombre-alumno").innerText = nombreActual;
             
-            // CARGAMOS HASTA 6 EVIDENCIAS
             for(let i=1; i<=6; i++){
                 const val = localStorage.getItem(`cesba_ev_${i}`);
                 if(val && document.getElementById(`evidencia-${i}`)) {
@@ -609,7 +636,6 @@
 
         function updateProgressUI() {
             let count = 0;
-            // Medimos el progreso en base a los 5 retos principales
             for(let i=1; i<=5; i++) {
                 if(localStorage.getItem(`cesba_ev_${i}`)) count++;
             }
