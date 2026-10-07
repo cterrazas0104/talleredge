@@ -18,8 +18,7 @@
         }
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         
-        /* Ocultamos la plantilla del DOM principal pero permitimos que html2pdf la lea */
-        #pdf-template { display: none; position: absolute; left: -9999px; top: -9999px; }
+        #pdf-template { display: none; }
     </style>
 </head>
 <body class="p-8">
@@ -36,9 +35,9 @@
         <div class="col-span-3 text-center text-gray-500 animate-pulse">Esperando conexiones de la API...</div>
     </div>
 
-    <!-- Plantilla de Certificado con dimensiones exactas Carta Horizontal -->
+    <!-- Plantilla de Certificado con dimensiones estándar Carta Horizontal -->
     <div id="pdf-template">
-        <div id="certificado-content" style="width: 1056px; height: 816px; padding: 60px; font-family: sans-serif; text-align: center; background: white; color: #0f172a; border: 16px solid #8b5cf6; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
+        <div id="certificado-content" style="width: 11in; height: 8.5in; padding: 0.6in; font-family: sans-serif; text-align: center; background: white; color: #0f172a; border: 0.2in solid #8b5cf6; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
             
             <h2 style="color: #8b5cf6; font-size: 26px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; font-weight: bold;">Jornada Tecnológica CESBA 2026</h2>
             <h1 style="font-size: 55px; margin: 10px 0 30px 0; font-weight: 900; color: #0f172a;">Certificado de Despliegue</h1>
@@ -63,7 +62,7 @@
     </div>
 
     <script>
-        // PEGA AQUÍ LA URL DE TU SCRIPT DE GOOGLE
+        // API Oficial Integrada
         const API_URL = "https://script.google.com/macros/s/AKfycbyCP0zlB95ADZk1kOZ5qZFh7LSHfMUwi0S3bPFLXai2TXCQw_guuO3-PpvGf3Y_LMPPBQ/exec";
 
         async function cargarMuro() {
@@ -75,7 +74,6 @@
                 if(data.length === 0) return;
                 
                 grid.innerHTML = '';
-                // Invertimos para ver a los más recientes arriba
                 data.reverse().forEach(alumno => {
                     grid.innerHTML += `
                         <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between items-center text-center transform transition hover:scale-105 hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(139,92,246,0.2)]">
@@ -98,21 +96,26 @@
         function descargarPDF(nombre) {
             document.getElementById('cert-nombre').innerText = nombre;
             
-            // Extraemos temporalmente el template de su escondite
+            // 1. Extraemos la plantilla y la anclamos a la esquina superior izquierda
             const template = document.getElementById('pdf-template');
             template.style.display = 'block';
+            template.style.position = 'fixed';
+            template.style.top = '0';
+            template.style.left = '0';
+            template.style.zIndex = '-9999'; // Queda escondida detrás de tu fondo azul
             
             const elemento = document.getElementById('certificado-content');
             
+            // 2. Forzamos el scroll a 0 para evitar el recorte del canvas
             const opt = {
                 margin:       0,
                 filename:     `Diploma_Edge_${nombre.replace(/\s+/g, '_')}.pdf`,
                 image:        { type: 'jpeg', quality: 1 },
-                html2canvas:  { scale: 2, useCORS: true, windowWidth: 1056 }, // Forzamos el ancho del canvas
-                jsPDF:        { unit: 'px', format: [1056, 816], orientation: 'landscape' } // Dimensiones exactas
+                html2canvas:  { scale: 2, useCORS: true, scrollY: 0, scrollX: 0 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
             };
 
-            // Generamos el PDF y volvemos a esconder el template
+            // 3. Generamos el PDF y ocultamos la plantilla
             html2pdf().set(opt).from(elemento).save().then(() => {
                 template.style.display = 'none';
             });
