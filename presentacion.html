@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arquitectura Web y Edge Security</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Inter', sans-serif; 
+      background-color: #000; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    .slides-wrapper {
+      position: relative;
+      width: 100vw;
+      max-width: 1280px;
+      height: 100vh;
+      max-height: 720px;
+      overflow: hidden;
+      background-color: #0f172a;
+    }
+
+    .slide-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .slide-container.active {
+      opacity: 1;
+      z-index: 10;
+      pointer-events: auto;
+    }
+
+    h1, h2, h3, .display-font {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Common Utility Classes */
+    .slide-padding { padding: 4rem 5rem; }
+    .title-area { margin-bottom: 3rem; }
+    .slide-title { font-size: 3rem; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.1; }
+    .slide-subtitle { font-size: 1.25rem; color: #64748b; margin: 0.75rem 0 0 0; font-weight: 500; }
+    
+    .content-center { flex-grow: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
+    .card-row { display: flex; gap: 2rem; align-items: stretch; width: 100%; justify-content: center; }
+    
+    /* Navigation Controls */
+    .nav-controls {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 100;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-btn {
+      background: rgba(15, 23, 42, 0.8);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(15, 23, 42, 1); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 4px;
+      background: #f97316;
+      transition: width 0.3s ease;
+      z-index: 100;
+    }
+
+    /* Dark theme specifics */
+    .dark-bg { background-color: #0f172a; }
+    .dark-bg .slide-title { color: #f8fafc; }
+    .dark-bg .slide-subtitle { color: #94a3b8; }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .slide-padding { padding: 2rem 3rem; }
+      .slide-title { font-size: 2.5rem; }
+      .card-row { flex-direction: column; gap: 1rem; }
+    }
+    @media (max-width: 768px) {
+      body { height: auto; display: block; }
+      .slides-wrapper { height: 100vh; max-height: none; overflow-y: auto; }
+      .slide-container { position: relative; height: auto; min-height: 100vh; opacity: 1; z-index: 1; pointer-events: auto; }
+      .nav-controls, .progress-bar { display: none; } /* Hide presentation controls on mobile */
+      #slide6 { flex-direction: column !important; }
+      #slide6 > div { padding: 2rem !important; }
+      .diagram-flex { flex-direction: column; align-items: center; }
+      .diagram-connector { transform: rotate(90deg); margin: 1rem 0; width: 40px !important; }
+      .diagram-split { display: none; } /* Hide complex SVG on mobile for simplicity, or redraw */
+    }
+
+    /* SVG definitions styling */
+    svg { overflow: visible; }
+  </style>
+</head>
+<body>
+
+<div class="slides-wrapper">
+  
+  <div class="progress-bar" id="progressBar" style="width: 20%;"></div>
+
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" onclick="prevSlide()"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="nav-btn" id="nextBtn" onclick="nextSlide()"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
+
+  <!-- Hidden SVG definitions for the diagram arrows -->
+  <svg style="display:none;">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"></path>
+      </marker>
+    </defs>
+  </svg>
+
+  <!-- Slide 0: Cover -->
+  <div class="slide-container slide-padding active dark-bg" id="slide0" style="justify-content: center; align-items: flex-start;">
+    <div style="width: 80px; height: 6px; background: #f97316; margin-bottom: 2.5rem;"></div>
+    <h1 style="font-size: 4.5rem; font-weight: 700; color: #f8fafc; line-height: 1.1; max-width: 900px; margin: 0 0 1.5rem 0;">
+      Dominios, Hosting y Arquitectura Edge
+    </h1>
+    <p style="font-size: 1.5rem; color: #94a3b8; max-width: 600px; margin: 0;">
+      Fundamentos de despliegue y ciberseguridad.
+    </p>
+  </div>
+
+  <!-- Slide 1: La Anatomía de la Web -->
+  <div class="slide-container slide-padding" id="slide1" style="background: #f8fafc;">
+    <div class="title-area">
+      <h2 class="slide-title">1. La Anatomía de la Web</h2>
+      <p class="slide-subtitle">Analogía Inmobiliaria: Los 3 pilares de un sitio.</p>
+    </div>
+    
+    <div class="content-center">
+      <div class="card-row">
+        <!-- Dominio -->
+        <div style="background: #ffffff; padding: 3rem 2.5rem; border-radius: 16px; flex: 1; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center;">
+          <div style="width: 80px; height: 80px; background: #eff6ff; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
+            <i class="fa-solid fa-map-location-dot" style="font-size: 2.5rem; color: #3b82f6;"></i>
+          </div>
+          <h3 style="font-size: 1.75rem; color: #0f172a; margin: 0 0 1rem 0;">Dominio</h3>
+          <ul style="text-align: left; color: #475569; font-size: 1.1rem; padding-left: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; margin: 0;">
+            <li>Es la dirección postal (ej. marca.com).</li>
+            <li>Indica a los usuarios cómo llegar.</li>
+          </ul>
+        </div>
+        
+        <!-- Hosting -->
+        <div style="background: #ffffff; padding: 3rem 2.5rem; border-radius: 16px; flex: 1; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center;">
+          <div style="width: 80px; height: 80px; background: #f5f3ff; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
+             <i class="fa-solid fa-server" style="font-size: 2.5rem; color: #8b5cf6;"></i>
+          </div>
+          <h3 style="font-size: 1.75rem; color: #0f172a; margin: 0 0 1rem 0;">Hosting</h3>
+          <ul style="text-align: left; color: #475569; font-size: 1.1rem; padding-left: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; margin: 0;">
+            <li>El terreno físico donde construyes.</li>
+            <li>Almacena tus archivos e imágenes.</li>
+          </ul>
+        </div>
+        
+        <!-- Código -->
+        <div style="background: #ffffff; padding: 3rem 2.5rem; border-radius: 16px; flex: 1; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; align-items: center;">
+          <div style="width: 80px; height: 80px; background: #ecfdf5; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
+            <i class="fa-solid fa-house-chimney" style="font-size: 2.5rem; color: #10b981;"></i>
+          </div>
+          <h3 style="font-size: 1.75rem; color: #0f172a; margin: 0 0 1rem 0;">Código</h3>
+           <ul style="text-align: left; color: #475569; font-size: 1.1rem; padding-left: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; margin: 0;">
+            <li>La casa en sí (HTML/JS/CSS).</li>
+            <li>Estructura funcional construida.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 2: ¿Cómo registrar un pedazo de Internet? -->
+  <div class="slide-container slide-padding" id="slide2">
+    <div class="title-area">
+      <h2 class="slide-title">2. ¿Cómo registrar un pedazo de Internet?</h2>
+      <p class="slide-subtitle">Proceso de compra y decisiones estratégicas.</p>
+    </div>
+    
+    <div class="content-center">
+      <div style="display: flex; flex-direction: column; gap: 1.5rem; width: 100%; max-width: 900px;">
+        
+        <!-- Extensión .com -->
+        <div style="display: flex; align-items: center; width: 100%; padding: 1.5rem 2rem; background: #f8fafc; border-radius: 12px; border-left: 4px solid #3b82f6;">
+          <div style="width: 60px; display: flex; justify-content: center; flex-shrink: 0;">
+            <i class="fa-solid fa-globe" style="font-size: 2rem; color: #0f172a;"></i>
+          </div>
+          <div style="margin-left: 1.5rem;">
+            <h3 class="display-font" style="font-size: 1.5rem; color: #0f172a; margin: 0 0 0.5rem 0;">Estrategia .COM</h3>
+            <ul style="margin: 0; padding-left: 1.2rem; color: #475569; font-size: 1.1rem;">
+              <li>Máximo alcance global y reconocimiento.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Extensión .mx -->
+        <div style="display: flex; align-items: center; width: 100%; padding: 1.5rem 2rem; background: #f8fafc; border-radius: 12px; border-left: 4px solid #10b981;">
+          <div style="width: 60px; display: flex; justify-content: center; flex-shrink: 0;">
+            <i class="fa-solid fa-map-pin" style="font-size: 2rem; color: #0f172a;"></i>
+          </div>
+          <div style="margin-left: 1.5rem;">
+            <h3 class="display-font" style="font-size: 1.5rem; color: #0f172a; margin: 0 0 0.5rem 0;">Estrategia .MX</h3>
+            <ul style="margin: 0; padding-left: 1.2rem; color: #475569; font-size: 1.1rem;">
+               <li>Fuerte identidad tecnológica y enfoque local.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Privacidad WHOIS MODIFICADO -->
+        <div style="display: flex; align-items: center; width: 100%; padding: 1.5rem 2rem; background: #fff7ed; border-radius: 12px; border-left: 4px solid #f97316;">
+          <div style="width: 60px; display: flex; justify-content: center; flex-shrink: 0;">
+            <i class="fa-solid fa-user-shield" style="font-size: 2rem; color: #f97316;"></i>
+          </div>
+          <div style="margin-left: 1.5rem;">
+            <h3 class="display-font" style="font-size: 1.5rem; color: #9a3412; margin: 0 0 0.5rem 0;">Privacidad WHOIS: Úsala cuando sea posible</h3>
+            <ul style="margin: 0; padding-left: 1.2rem; color: #475569; font-size: 1.1rem;">
+              <li style="margin-bottom: 0.4rem;"><strong>Actívala siempre que esté disponible</strong> (ej. en .com) para evitar spam y proteger tus datos personales.</li>
+              <li><strong>Excepción normativa:</strong> Por políticas de NIC México, los dominios <strong>.mx y .com.mx</strong> no permiten ocultar los datos del titular por requerimientos de transparencia legal.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Hosting Tradicional vs. Infraestructura Edge -->
+  <div class="slide-container slide-padding" id="slide3" style="background: #f8fafc;">
+    <div class="title-area" style="text-align: center;">
+      <h2 class="slide-title">3. Hosting Tradicional vs. Edge</h2>
+      <p class="slide-subtitle">La evolución hacia la descentralización.</p>
+    </div>
+    
+    <div class="content-center">
+      <div style="display: flex; width: 100%; gap: 4rem; align-items: stretch; justify-content: center; flex-wrap: wrap;">
+        
+        <!-- Tradicional -->
+        <div style="flex: 1; min-width: 300px; max-width: 480px; background: #ffffff; padding: 3rem 2rem; border-radius: 24px; text-align: left; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
+          <div style="width: 64px; height: 64px; border-radius: 12px; background: #fee2e2; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+            <i class="fa-solid fa-database" style="font-size: 1.5rem; color: #ef4444;"></i>
+          </div>
+          <h3 class="display-font" style="font-size: 1.8rem; color: #0f172a; margin: 0 0 1.5rem 0;">Hosting Tradicional</h3>
+          <ul style="margin: 0; padding-left: 1.2rem; color: #475569; font-size: 1.1rem; display: flex; flex-direction: column; gap: 1rem;">
+             <li>Archivos en un solo servidor centralizado.</li>
+             <li>Más lento por latencia geográfica.</li>
+             <li>Vulnerable a caídas o saturación local.</li>
+          </ul>
+        </div>
+
+        <!-- Edge -->
+        <div style="flex: 1; min-width: 300px; max-width: 480px; background: #0f172a; padding: 3rem 2rem; border-radius: 24px; text-align: left; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);">
+          <div style="width: 64px; height: 64px; border-radius: 12px; background: rgba(249, 115, 22, 0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+            <i class="fa-solid fa-bolt" style="font-size: 1.5rem; color: #f97316;"></i>
+          </div>
+          <h3 class="display-font" style="font-size: 1.8rem; color: #ffffff; margin: 0 0 1.5rem 0;">Arquitectura Edge</h3>
+          <ul style="margin: 0; padding-left: 1.2rem; color: #cbd5e1; font-size: 1.1rem; display: flex; flex-direction: column; gap: 1rem;">
+            <li>Sitio descentralizado (múltiples nodos).</li>
+            <li>Modelo Serverless gratuito (ej. Cloudflare).</li>
+            <li>Ultrarrápido y resistente globalmente.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: El puente hacia la seguridad (Los DNS) -->
+  <div class="slide-container slide-padding" id="slide4">
+    <div class="title-area">
+      <h2 class="slide-title">4. El puente hacia la seguridad</h2>
+      <p class="slide-subtitle">Cambio de Nameservers hacia el escudo perimetral (WAF).</p>
+    </div>
+    
+    <div class="content-center">
+      <!-- Flexbox Diagram based on user's graph TD -->
+      <div class="diagram-flex" style="display: flex; align-items: center; justify-content: center; width: 100%; gap: 0.5rem; position: relative;">
+        
+        <!-- Node A: Visitante -->
+        <div style="background: #1e293b; border: 2px solid #3b82f6; border-radius: 8px; padding: 1.5rem; text-align: center; flex-shrink: 0; min-width: 140px; z-index: 2;">
+          <i class="fa-solid fa-user" style="color: #60a5fa; margin-bottom: 0.5rem; font-size: 1.2rem;"></i>
+          <h3 class="display-font" style="font-size: 1.1rem; color: #ffffff; margin: 0;">Visitante</h3>
+        </div>
+
+        <!-- Connector A -> B -->
+        <div class="diagram-connector" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; flex-shrink: 0;">
+          <span style="font-size: 0.8rem; color: #64748b; font-weight: 600; margin-bottom: 4px; text-align: center; line-height: 1.1;">Escribe tu dominio</span>
+          <svg width="100%" height="16">
+            <line x1="0" y1="8" x2="110" y2="8" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"></line>
+          </svg>
+        </div>
+
+        <!-- Node B: DNS -->
+        <div style="background: #8b5cf6; border: 2px solid #ffffff; border-radius: 8px; padding: 1.5rem; text-align: center; flex-shrink: 0; min-width: 160px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 2;">
+          <span style="font-size: 0.7rem; color: #e2e8f0; display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Proveedor</span>
+          <h3 class="display-font" style="font-size: 1.1rem; color: #ffffff; margin: 0;">DNS</h3>
+        </div>
+
+        <!-- Connector B -> C -->
+        <div class="diagram-connector" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 140px; flex-shrink: 0;">
+          <span style="font-size: 0.8rem; color: #64748b; font-weight: 600; margin-bottom: 4px; text-align: center; line-height: 1.1;">Nameservers cambiados</span>
+          <svg width="100%" height="16">
+            <line x1="0" y1="8" x2="130" y2="8" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"></line>
+          </svg>
+        </div>
+
+        <!-- Node C: Cloudflare -->
+        <div style="background: #f97316; border: 3px solid #ffffff; border-radius: 12px; padding: 2rem; text-align: center; flex-shrink: 0; min-width: 220px; box-shadow: 0 8px 15px rgba(249, 115, 22, 0.25); z-index: 2;">
+          <i class="fa-solid fa-cloud-bolt" style="font-size: 2rem; color: #ffffff; margin-bottom: 0.5rem;"></i>
+          <h3 class="display-font" style="font-size: 1.5rem; color: #ffffff; margin: 0;">Cloudflare</h3>
+          <span style="font-size: 0.9rem; color: #ffedd5; display: block; margin-top: 4px; font-weight: 500;">Edge / WAF</span>
+        </div>
+
+        <!-- Split Connectors C -> E / D -->
+        <div class="diagram-split" style="position: relative; width: 120px; height: 200px; flex-shrink: 0;">
+          <svg width="120" height="200" viewBox="0 0 120 200" style="position: absolute; top: 0; left: 0;">
+            <!-- Path Up to Bloqueo -->
+            <path d="M 0 100 C 60 100, 60 30, 110 30" stroke="#ef4444" stroke-width="2" fill="none" stroke-dasharray="4" marker-end="url(#arrow)"></path>
+            <!-- Path Down to Servidor -->
+            <path d="M 0 100 C 60 100, 60 170, 110 170" stroke="#10b981" stroke-width="2" fill="none" marker-end="url(#arrow)"></path>
+          </svg>
+           <span style="position: absolute; top: 15px; left: 20px; font-size: 0.75rem; color: #ef4444; font-weight: 600;">Tráfico Malicioso</span>
+           <span style="position: absolute; bottom: 15px; left: 20px; font-size: 0.75rem; color: #10b981; font-weight: 600;">Tráfico Legítimo</span>
+        </div>
+
+        <!-- Target Nodes Column -->
+        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 200px; flex-shrink: 0; min-width: 180px; z-index: 2;">
+          
+          <!-- Node E: Bloqueo -->
+          <div style="background: #ef4444; border: 2px solid #ffffff; border-radius: 8px; padding: 1rem; text-align: center;">
+            <i class="fa-solid fa-shield-halved" style="color: #fee2e2; margin-bottom: 0.25rem;"></i>
+            <h3 class="display-font" style="font-size: 1.1rem; color: #ffffff; margin: 0;">Bloqueo 403</h3>
+          </div>
+
+          <!-- Node D: Servidor -->
+          <div style="background: #10b981; border: 2px solid #ffffff; border-radius: 8px; padding: 1rem; text-align: center;">
+            <span style="font-size: 0.7rem; color: #d1fae5; display: block; margin-bottom: 2px; text-transform: uppercase;">GitHub Pages / Worker</span>
+            <h3 class="display-font" style="font-size: 1.1rem; color: #ffffff; margin: 0;">Servidor Final</h3>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Construye tu Identidad Profesional -->
+  <div class="slide-container" id="slide5" style="flex-direction: row; padding: 0;">
+    
+    <!-- Left Text Area -->
+    <div style="flex: 1; padding: 5rem; display: flex; flex-direction: column; justify-content: center; background: #ffffff;">
+      <h2 class="slide-title" style="margin-bottom: 3rem;">5. Construye tu Identidad Profesional</h2>
+      
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2rem;">
+        <li style="display: flex; align-items: flex-start; gap: 1.25rem;">
+          <div style="width: 40px; height: 40px; border-radius: 8px; background: #eff6ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <i class="fa-solid fa-id-card" style="color: #3b82f6; font-size: 1.2rem;"></i>
+          </div>
+          <p style="font-size: 1.25rem; color: #1e293b; margin: 0; font-weight: 500; line-height: 1.4;">
+            El dominio propio es la carta de presentación de un ingeniero.
+          </p>
+        </li>
+        <li style="display: flex; align-items: flex-start; gap: 1.25rem;">
+          <div style="width: 40px; height: 40px; border-radius: 8px; background: #f0fdf4; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <i class="fa-solid fa-rocket" style="color: #10b981; font-size: 1.2rem;"></i>
+          </div>
+          <p style="font-size: 1.25rem; color: #1e293b; margin: 0; font-weight: 500; line-height: 1.4;">
+            Portafolio web ultrarrápido y seguro mediante arquitectura Edge.
+          </p>
+        </li>
+        <li style="display: flex; align-items: flex-start; gap: 1.25rem;">
+          <div style="width: 40px; height: 40px; border-radius: 8px; background: #fff7ed; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <i class="fa-solid fa-wallet" style="color: #f97316; font-size: 1.2rem;"></i>
+          </div>
+          <p style="font-size: 1.25rem; color: #1e293b; margin: 0; font-weight: 500; line-height: 1.4;">
+            Inversión única: solo pagas la anualidad del registro de dominio.
+          </p>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Right Image Area -->
+    <div style="flex: 1; position: relative; min-height: 300px;">
+      <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop" alt="Programador estructurando código" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='https://placehold.co/800x600/0f172a/ffffff?text=Código+y+Arquitectura'">
+      <!-- Gradient overlay for smooth transition -->
+      <div style="width: 100%; height: 100%; background: linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0) 25%); position: absolute; top: 0; left: 0;"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide-container');
+  const totalSlides = slides.length;
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const progressBar = document.getElementById('progressBar');
+
+  function updateSlides() {
+    slides.forEach((slide, index) => {
+      if (index === currentSlide) {
+        slide.classList.add('active');
+      } else {
+        slide.classList.remove('active');
+      }
+    });
+
+    // Update buttons
+    prevBtn.disabled = currentSlide === 0;
+    nextBtn.disabled = currentSlide === totalSlides - 1;
+
+    // Update progress bar
+    const progress = ((currentSlide + 1) / totalSlides) * 100;
+    progressBar.style.width = `${progress}%`;
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides - 1) {
+      currentSlide++;
+      updateSlides();
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateSlides();
+    }
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'Space') {
+      nextSlide();
+    } else if (e.key === 'ArrowLeft') {
+      prevSlide();
+    }
+  });
+
+  // Initialize
+  updateSlides();
+</script>
+
+</body>
+</html>
